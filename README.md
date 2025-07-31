@@ -7,7 +7,6 @@
 # Arbo Editor
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build](https://github.com/mallikmusaddiq1/arbo-editor/actions/workflows/main.yml/badge.svg)](https://github.com/mallikmusaddiq1/arbo-editor/actions)
 [![Last Commit](https://img.shields.io/github/last-commit/mallikmusaddiq1/arbo-editor)](https://github.com/mallikmusaddiq1/arbo-editor/commits/main)
 [![Top Language](https://img.shields.io/github/languages/top/mallikmusaddiq1/arbo-editor)](https://github.com/mallikmusaddiq1/arbo-editor/)
 [![Total Downloads](https://img.shields.io/github/downloads/mallikmusaddiq1/arbo-editor/total)](https://github.com/mallikmusaddiq1/arbo-editor/releases)
