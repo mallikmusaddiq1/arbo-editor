@@ -8,6 +8,38 @@
   <title>Arbo Editor</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codicon/0.0.8/codicon.min.css" />
   <style>
+    /* CSS Variables for easier theme and spacing management */
+    :root {
+      --bg-primary: #1e1e1e;
+      --bg-secondary: #252526;
+      --bg-tertiary: #333333;
+      --text-color: #cccccc;
+      --border-color: #444444;
+      --accent-color: #007acc;
+      --accent-hover-color: #005f99;
+      --button-hover-bg: #555555;
+      --button-active-scale: 0.98;
+      --transition-speed: 0.2s;
+      --toast-success: #4CAF50;
+      --toast-error: #f44336;
+      --toast-info: #2196F3;
+      --toolbar-height: 36px; /* Approx height, updated dynamically by JS */
+      --status-bar-height: 32px; /* Approx height, updated dynamically by JS */
+
+      /* Base font size for the entire app, influencing all 'em' units */
+      font-size: 10px; /* Base font size for overall smaller UI */
+    }
+
+    /* Light Theme Variables */
+    body.vs-light {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f3f3f3;
+      --bg-tertiary: #e6e6e6;
+      --text-color: #333333;
+      --border-color: #cccccc;
+      --button-hover-bg: #dddddd;
+    }
+
     /* Basic Reset */
     * {
       box-sizing: border-box;
@@ -18,12 +50,11 @@
     html, body {
       height: 100vh;
       width: 100vw;
-      overflow: hidden; /* Prevent body scroll, handled by individual containers or scaling */
+      overflow: hidden; /* Prevent body scroll, handled by individual containers */
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #1e1e1e;
-      color: #cccccc;
-      /* Default font size for the entire app, influencing all 'em' units */
-      font-size: 10px; /* Base font size reduced for overall smaller UI */
+      background: var(--bg-primary);
+      color: var(--text-color);
+      line-height: 1.5; /* Improved readability */
     }
 
     #app {
@@ -45,7 +76,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: #1e1e1e;
+      background: var(--bg-primary);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -61,7 +92,7 @@
 
     .spinner {
       border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid #007acc;
+      border-top: 4px solid var(--accent-color);
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -76,92 +107,83 @@
     /* Sidebar */
     #sidebar {
       width: 50px; /* Smaller sidebar width */
-      background: #333333;
+      background: var(--bg-tertiary);
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-top: 5px; /* Reduced padding */
-      border-right: 1px solid #444444;
-      overflow-y: auto; /* Allow sidebar to scroll if content exceeds height */
+      padding-top: 0.5em; /* Reduced padding */
+      border-right: 1px solid var(--border-color);
+      overflow-y: auto; /* Allow sidebar to scroll */
       flex-shrink: 0;
-      transition: width 0.3s ease, transform 0.3s ease; /* Add transform for smooth hiding */
+      transition: width var(--transition-speed) ease, transform var(--transition-speed) ease;
     }
 
-    #sidebar.collapsed { /* New class for collapsing sidebar */
+    #sidebar.collapsed {
         width: 0;
         padding-left: 0;
         padding-right: 0;
         border-right: none;
-        /* Optionally, hide content when collapsed if needed for full effect */
-        overflow: hidden;
-    }
-
-    #sidebar.hidden { /* Existing class, may be redundant or used differently */
-        transform: translateX(-100%);
-        width: 0;
-        padding-left: 0;
-        padding-right: 0;
-        border-right: none;
+        overflow: hidden; /* Hide content when collapsed */
     }
 
     #sidebar button, #sidebar select {
       background: none;
       border: none;
-      color: #cccccc;
+      color: var(--text-color);
       cursor: pointer;
-      padding: 8px; /* Reduced padding for buttons */
+      padding: 0.8em; /* Relative padding */
       width: 100%;
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4em; /* Relative to body font size */
-      margin-bottom: 3px; /* Reduced margin */
+      font-size: 1.4em;
+      margin-bottom: 0.3em;
       border-radius: 4px;
-      transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, transform 0.1s ease;
     }
 
     #sidebar button:hover, #sidebar select:hover {
-      background: #555555;
-      color: #ffffff;
+      background: var(--button-hover-bg);
+      color: #ffffff; /* White text on hover for contrast */
       transform: scale(1.02);
     }
 
     #sidebar button:active {
-      transform: scale(0.98);
+      transform: scale(var(--button-active-scale));
     }
 
     #sidebar button.active {
-      background: #007acc;
+      background: var(--accent-color);
       color: #ffffff;
     }
 
     #sidebar button .codicon, #sidebar select .codicon {
-      font-size: 1.8em; /* Relative to button font size */
-      transition: transform 0.2s ease;
+      font-size: 1.8em;
+      transition: transform var(--transition-speed) ease;
     }
 
     #sidebar select {
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
-      background-color: #333333;
-      border: 1px solid #444444;
-      padding: 3px 0; /* Reduced padding */
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      padding: 0.3em 0;
       font-size: 1.2em;
-      color: #cccccc;
+      color: var(--text-color);
       text-align-last: center;
-      transition: border-color 0.2s ease, background-color 0.2s ease;
+      transition: border-color var(--transition-speed) ease, background-color var(--transition-speed) ease;
       position: relative;
     }
 
     #sidebar select:hover {
-      border-color: #007acc;
+      border-color: var(--accent-color);
     }
 
     #sidebar select option {
-      background-color: #333333;
-      color: #cccccc;
+      background-color: var(--bg-tertiary);
+      color: var(--text-color);
     }
 
     #font-size-select-wrapper, #language-select-wrapper {
@@ -170,23 +192,31 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 3px; /* Reduced margin */
+      margin-bottom: 0.3em;
     }
 
     #font-size-select-wrapper .codicon, #language-select-wrapper .codicon {
       position: absolute;
-      left: 5px; /* Adjusted icon position */
+      left: 0.5em;
       top: 50%;
       transform: translateY(-50%);
       font-size: 1.5em;
-      color: #cccccc;
+      color: var(--text-color);
       pointer-events: none;
     }
 
     #font-size-select, #language-select {
-      padding-left: 20px; /* Adjusted for smaller icon */
+      padding-left: 2.5em; /* Adjusted for icon */
       width: 100%;
-      height: 30px; /* Smaller height */
+      height: 3em; /* Relative height */
+    }
+
+    /* Horizontal Rule in Sidebar */
+    #sidebar hr {
+      width: 80%;
+      border: 0;
+      border-top: 1px solid var(--border-color);
+      margin: 0.5em 0;
     }
 
     /* Editor Container */
@@ -195,8 +225,8 @@
       height: 100%;
       display: flex;
       flex-direction: column;
-      background: #1e1e1e;
-      transition: all 0.3s ease;
+      background: var(--bg-primary);
+      transition: all var(--transition-speed) ease;
       position: relative; /* For read-only overlay */
     }
 
@@ -213,36 +243,37 @@
 
     /* Top Toolbar for Editor */
     #editor-toolbar {
-      background: #252526;
-      padding: 3px 8px; /* Reduced padding */
+      background: var(--bg-secondary);
+      padding: 0.3em 0.8em;
       display: flex;
-      gap: 5px; /* Reduced gap */
-      border-bottom: 1px solid #333333;
+      gap: 0.5em;
+      border-bottom: 1px solid var(--border-color);
       align-items: center;
-      flex-shrink: 0; /* Prevent toolbar from shrinking */
+      flex-shrink: 0;
+      height: var(--toolbar-height); /* Ensure fixed height for calculation */
     }
 
     #editor-toolbar button {
       background: none;
       border: none;
-      color: #cccccc;
+      color: var(--text-color);
       cursor: pointer;
-      padding: 3px 6px; /* Reduced padding */
+      padding: 0.3em 0.6em;
       font-size: 1.3em;
       border-radius: 4px;
-      transition: background-color 0.2s ease, color 0.2s ease;
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     #editor-toolbar button:hover {
-      background: #555555;
+      background: var(--button-hover-bg);
       color: #ffffff;
     }
 
     #editor-toolbar button .codicon {
-      font-size: 1.6em; /* Relative to button font size */
+      font-size: 1.6em;
     }
 
     /* Monaco Editor Wrapper */
@@ -255,23 +286,21 @@
     /* Read-Only Overlay */
     .read-only-overlay {
       position: absolute;
-      /* Adjusted top to consider toolbar height using CSS variable */
       top: var(--toolbar-height);
       left: 0;
       width: 100%;
-      /* Adjusted height to cover only the editor area, excluding toolbar and status bar */
       height: calc(100% - var(--toolbar-height) - var(--status-bar-height));
       background: rgba(0, 0, 0, 0.3);
       display: flex;
       justify-content: center;
       align-items: center;
       color: #fff;
-      font-size: 2em; /* Smaller font for overlay text */
+      font-size: 2em;
       font-weight: bold;
       z-index: 50;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 0.3s ease-in-out;
+      transition: opacity var(--transition-speed) ease-in-out;
     }
 
     .read-only-overlay.visible {
@@ -280,41 +309,42 @@
 
     /* Status Bar */
     #status-bar {
-      background: #007acc;
+      background: var(--accent-color);
       color: #ffffff;
-      padding: 4px 8px; /* Reduced padding */
-      font-size: 1.1em; /* Smaller font size */
+      padding: 0.4em 0.8em;
+      font-size: 1.1em;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 10px; /* Reduced gap */
-      flex-shrink: 0; /* Crucial: Prevents status bar from shrinking and hiding content */
-      transition: background-color 0.2s ease;
+      gap: 1em;
+      flex-shrink: 0;
+      transition: background-color var(--transition-speed) ease;
+      height: var(--status-bar-height); /* Ensure fixed height for calculation */
     }
 
     #status-bar span {
       display: flex;
       align-items: center;
-      gap: 3px; /* Reduced gap */
-      transition: color 0.2s ease;
+      gap: 0.3em;
+      transition: color var(--transition-speed) ease;
     }
 
     .codicon {
       font-family: 'codicon';
       font-size: 1em; /* Base icon size relative to parent font size */
-      transition: color 0.2s ease;
+      transition: color var(--transition-speed) ease;
     }
 
     /* Custom Context Menu */
     #custom-context-menu {
       position: absolute;
-      background: #252526;
-      border: 1px solid #444444;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
       border-radius: 4px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
       z-index: 1000;
       display: none;
-      padding: 3px 0; /* Reduced padding */
+      padding: 0.3em 0;
       opacity: 0;
       transform: scale(0.95);
       transform-origin: top left;
@@ -330,20 +360,20 @@
     #custom-context-menu button {
       background: none;
       border: none;
-      color: #cccccc;
-      padding: 6px 10px; /* Reduced padding */
+      color: var(--text-color);
+      padding: 0.6em 1em;
       width: 100%;
       text-align: left;
       cursor: pointer;
-      font-size: 1.2em; /* Smaller font size */
+      font-size: 1.2em;
       display: flex;
       align-items: center;
-      gap: 5px; /* Reduced gap */
-      transition: background-color 0.2s ease, color 0.2s ease;
+      gap: 0.5em;
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
     }
 
     #custom-context-menu button:hover, #custom-context-menu button:focus {
-      background: #007acc;
+      background: var(--accent-color);
       color: #ffffff;
       outline: none;
     }
@@ -358,21 +388,21 @@
     /* Toast Notification */
     .toast {
       visibility: hidden;
-      min-width: 200px; /* Smaller min-width */
-      background-color: #333;
+      min-width: 20em;
+      background-color: var(--bg-tertiary);
       color: #fff;
       text-align: center;
-      border-radius: 4ഴും;
-      padding: 8px 12px; /* Reduced padding */
+      border-radius: 4px;
+      padding: 0.8em 1.2em;
       position: fixed;
       z-index: 1001;
       left: 50%;
-      transform: translateX(-50%) translateY(15px); /* Adjusted vertical position */
-      bottom: 20px; /* Adjusted bottom position */
-      font-size: 1.2em; /* Smaller font size */
+      transform: translateX(-50%) translateY(1.5em);
+      bottom: 2em;
+      font-size: 1.2em;
       opacity: 0;
-      transition: opacity 0.2s ease-out, transform 0.2s ease-out, background-color 0.2s ease;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Smaller shadow */
+      transition: opacity var(--transition-speed) ease-out, transform var(--transition-speed) ease-out, background-color var(--transition-speed) ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
     .toast.show {
@@ -381,16 +411,32 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    .toast.success {
-        background-color: #4CAF50;
+    .toast.success { background-color: var(--toast-success); }
+    .toast.error { background-color: var(--toast-error); }
+    .toast.info { background-color: var(--toast-info); }
+
+    /* Key Logging Display */
+    #key-logging-display {
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      padding: 0.4em 0.8em;
+      border-radius: 4px;
+      font-size: 0.9em;
+      position: absolute;
+      bottom: 0.3em;
+      right: 0.3em;
+      z-index: 50;
+      opacity: 0;
+      transition: opacity 0.1s ease-in-out;
+      pointer-events: none;
+      display: none; /* Hidden by default */
+      min-width: unset; /* Override toast min-width */
+      transform: none; /* Override toast transform */
     }
 
-    .toast.error {
-        background-color: #f44336;
-    }
-
-    .toast.info {
-        background-color: #2196F3;
+    #key-logging-display.show-key-log {
+      opacity: 1;
+      display: block;
     }
 
     /* Diff View Styles */
@@ -410,38 +456,38 @@
     }
 
     #diff-toolbar {
-      background: #252526;
-      padding: 5px 8px; /* Reduced padding */
+      background: var(--bg-secondary);
+      padding: 0.5em 0.8em;
       display: flex;
-      gap: 8px; /* Reduced gap */
-      border-bottom: 1px solid #333333;
+      gap: 0.8em;
+      border-bottom: 1px solid var(--border-color);
       align-items: center;
       justify-content: flex-end;
       flex-shrink: 0;
-      transition: background-color 0.2s ease;
+      transition: background-color var(--transition-speed) ease;
     }
 
     #diff-toolbar button {
-      background: #007acc;
+      background: var(--accent-color);
       color: #ffffff;
       border: none;
-      padding: 4px 8px; /* Reduced padding */
+      padding: 0.4em 0.8em;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 1.2em; /* Smaller font size */
+      font-size: 1.2em;
       display: flex;
       align-items: center;
-      gap: 3px; /* Reduced gap */
-      transition: background-color 0.2s ease, transform 0.1s ease;
+      gap: 0.3em;
+      transition: background-color var(--transition-speed) ease, transform 0.1s ease;
     }
 
     #diff-toolbar button:hover {
-      background: #005f99;
+      background: var(--accent-hover-color);
       transform: scale(1.02);
     }
 
     #diff-toolbar button:active {
-      transform: scale(0.98);
+      transform: scale(var(--button-active-scale));
     }
 
     #diff-editor {
@@ -472,14 +518,14 @@
     }
 
     .custom-modal {
-        background: #252526;
-        padding: 15px; /* Reduced padding */
-        border-radius: 6px; /* Slightly smaller border-radius */
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4); /* Smaller shadow */
-        max-width: 350px; /* Smaller max-width */
-        width: 85%; /* Adjusted width */
-        color: #cccccc;
-        transform: translateY(-15px); /* Adjusted vertical position */
+        background: var(--bg-secondary);
+        padding: 1.5em;
+        border-radius: 6px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        max-width: 35em;
+        width: 85%;
+        color: var(--text-color);
+        transform: translateY(-1.5em);
         transition: transform 0.3s ease-in-out;
     }
 
@@ -490,23 +536,23 @@
     .custom-modal h3 {
         margin-top: 0;
         color: #e0e0e0;
-        font-size: 1.2em; /* Smaller font size */
-        margin-bottom: 10px; /* Reduced margin */
+        font-size: 1.2em;
+        margin-bottom: 1em;
     }
 
     .custom-modal p {
-        margin-bottom: 15px; /* Reduced margin */
-        line-height: 1.4; /* Slightly tighter line height */
-        font-size: 0.9em; /* Smaller font size */
+        margin-bottom: 1.5em;
+        line-height: 1.4;
+        font-size: 0.9em;
     }
 
     .custom-modal input[type="text"] {
         width: 100%;
-        padding: 8px; /* Reduced padding */
-        margin-bottom: 15px; /* Reduced margin */
-        border: 1px solid #444444;
-        background-color: #333333;
-        color: #cccccc;
+        padding: 0.8em;
+        margin-bottom: 1.5em;
+        border: 1px solid var(--border-color);
+        background-color: var(--bg-tertiary);
+        color: var(--text-color);
         border-radius: 4px;
         font-size: 1em;
     }
@@ -514,25 +560,25 @@
     .custom-modal-buttons {
         display: flex;
         justify-content: flex-end;
-        gap: 8px; /* Reduced gap */
+        gap: 0.8em;
     }
 
     .custom-modal-buttons button {
-        padding: 6px 12px; /* Reduced padding */
+        padding: 0.6em 1.2em;
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        font-size: 0.9em; /* Smaller font size */
-        transition: background-color 0.2s ease, transform 0.1s ease;
+        font-size: 0.9em;
+        transition: background-color var(--transition-speed) ease, transform 0.1s ease;
     }
 
     .custom-modal-buttons button.confirm-btn {
-        background-color: #007acc;
+        background-color: var(--accent-color);
         color: #ffffff;
     }
 
     .custom-modal-buttons button.confirm-btn:hover {
-        background-color: #005f99;
+        background-color: var(--accent-hover-color);
         transform: scale(1.02);
     }
 
@@ -546,236 +592,124 @@
         transform: scale(1.02);
     }
 
-    /* Media query for desktop-like experience on smaller screens */
-    /* This will scale the entire body down, making it appear as if on a desktop,
-       and then enable scrolling to see the full content. */
+    /* Responsive Design - Fluid adjustments for desktop-like feel on smaller screens */
     @media (max-width: 768px) {
-        html, body {
-            overflow: auto; /* Allow scrolling/sliding on smaller screens */
+        :root {
+            font-size: 9px; /* Slightly smaller base font for tablets */
         }
-        body {
-            /* Adjust this scale value to your preference. 0.6-0.7 is even smaller. */
-            transform: scale(0.65); /* Even smaller scale for a truly "tiny" feel */
-            transform-origin: top left;
-            /* Calculate width/height to ensure the scaled content fills the original viewport space */
-            width: calc(100vw / 0.65);
-            height: calc(100vh / 0.65);
-        }
-
-        /* Adjust UI elements to be more usable after scaling */
         #sidebar {
-            width: 60px; /* Slightly wider sidebar when scaled down but still small */
+            width: 55px;
         }
         #sidebar button, #sidebar select {
-            font-size: 1.6em; /* Adjust font size for better readability after scaling */
-            padding: 10px;
+            padding: 0.6em;
+            font-size: 1.3em;
         }
         #sidebar button .codicon, #sidebar select .codicon {
-            font-size: 2.2em; /* Larger icons */
+            font-size: 1.6em;
         }
         #font-size-select, #language-select {
-          padding-left: 25px; /* Adjust for larger icon */
-          height: 35px; /* Make taller for easier touch */
-          font-size: 1.3em;
+          padding-left: 2em;
+          height: 3.5em;
         }
-
         #editor-toolbar {
-            padding: 5px 10px;
-            gap: 8px;
+            padding: 0.4em 0.6em;
+            gap: 0.6em;
         }
         #editor-toolbar button {
-            font-size: 1.5em;
-            padding: 5px 8px;
+            font-size: 1.2em;
+            padding: 0.4em 0.6em;
         }
         #editor-toolbar button .codicon {
-            font-size: 1.8em;
+            font-size: 1.5em;
         }
-
         #status-bar {
-            font-size: 1.3em;
-            padding: 5px 10px;
+            font-size: 1em;
+            padding: 0.4em 0.6em;
+            gap: 0.6em;
         }
-        #status-bar .codicon {
-            font-size: 1.5em;
-        }
-
         .toast {
-            min-width: unset;
-            width: 90%;
+            min-width: 90%;
             left: 5%;
-            transform: translateX(0%) translateY(20px) scale(calc(1/0.65)); /* Counter-scale toast so it doesn't shrink */
-            transform-origin: bottom center;
-            bottom: 25px;
-            padding: 12px 16px;
-            font-size: 1.5em;
+            transform: translateX(0%) translateY(2em); /* Remove horizontal transform for mobile */
+            bottom: 2em;
+            font-size: 1.2em;
         }
         .toast.show {
-            transform: translateX(0%) translateY(0) scale(calc(1/0.65));
-        }
-
-        .custom-modal-overlay {
-            /* Counter-scale modal overlay so it covers correctly */
-            transform: scale(calc(1/0.65));
-            transform-origin: top left;
-            width: 100vw;
-            height: 100vh;
+            transform: translateX(0%) translateY(0);
         }
         .custom-modal {
-            max-width: 500px; /* Larger modal for readability */
-            padding: 25px;
-            transform: translateY(-20px) scale(calc(1/0.65)); /* Counter-scale modal content */
-        }
-        .custom-modal-overlay.visible .custom-modal {
-            transform: translateY(0) scale(calc(1/0.65));
-        }
-        .custom-modal h3 {
-            font-size: 1.5em;
-        }
-        .custom-modal p {
-            font-size: 1em;
-        }
-        .custom-modal input[type="text"] {
-            font-size: 1em;
-            padding: 10px;
-        }
-        .custom-modal-buttons button {
-            font-size: 1em;
-            padding: 8px 15px;
-        }
-
-        #custom-context-menu {
-            /* Counter-scale context menu */
-            transform: scale(calc(1/0.65));
-            transform-origin: top left;
-            font-size: 1em;
-        }
-        #custom-context-menu.show {
-            transform: scale(calc(1/0.65));
-        }
-        #custom-context-menu button {
-            padding: 8px 12px;
-            font-size: 1.3em;
-        }
-        #custom-context-menu button .codicon {
-            font-size: 1.6em;
+            max-width: 90%; /* Increase modal width on smaller screens */
+            padding: 1.8em;
         }
     }
 
-    /* General responsive adjustments for very small screens, if needed */
     @media (max-width: 480px) {
-        body {
-            transform: scale(0.55); /* Even more aggressive scaling for tiny screens */
-            width: calc(100vw / 0.55);
-            height: calc(100vh / 0.55);
+        :root {
+            font-size: 8px; /* Even smaller base font for mobile */
         }
-
         #sidebar {
-            width: 55px; /* Adjust sidebar width */
-            padding-top: 3px;
+            width: 45px;
         }
         #sidebar button, #sidebar select {
-            padding: 6px;
-            font-size: 1.5em;
+            padding: 0.5em;
+            font-size: 1.2em;
         }
         #sidebar button .codicon, #sidebar select .codicon {
-            font-size: 2em;
+            font-size: 1.4em;
         }
         #font-size-select, #language-select {
-          padding-left: 20px;
-          height: 30px;
-          font-size: 1.2em;
+          padding-left: 1.8em;
+          height: 3em;
         }
-
         #editor-toolbar {
-            padding: 3px 5px;
-            gap: 3px;
+            padding: 0.3em 0.4em;
+            gap: 0.4em;
         }
         #editor-toolbar button {
-            font-size: 1.3em;
-            padding: 3px 6px;
+            font-size: 1.1em;
+            padding: 0.3em 0.5em;
         }
         #editor-toolbar button .codicon {
-            font-size: 1.6em;
+            font-size: 1.3em;
         }
-
         #status-bar {
-            font-size: 1.1em;
-            padding: 4px 5px;
+            font-size: 0.9em;
+            padding: 0.3em 0.4em;
+            gap: 0.4em;
         }
-        #status-bar .codicon {
-            font-size: 1.3em;
-        }
-
         .toast {
-            bottom: 15px;
-            padding: 10px 14px;
-            font-size: 1.3em;
+            bottom: 1.5em;
+            font-size: 1em;
         }
         .custom-modal {
-            max-width: 90%; /* Make modal nearly full width on very small screens */
-            padding: 15px;
+            padding: 1.2em;
         }
-        .custom-modal h3 {
-            font-size: 1.3em;
-        }
-        .custom-modal p {
-            font-size: 0.9em;
-        }
-        .custom-modal input[type="text"] {
-            font-size: 0.9em;
-            padding: 8px;
-        }
-        .custom-modal-buttons button {
-            font-size: 0.9em;
-            padding: 6px 12px;
-        }
-    }
-    
-    /* New style for key logging display */
-    #key-logging-display {
-      background-color: rgba(0, 0, 0, 0.7);
-      color: #fff;
-      padding: 4px 8px; /* Reduced padding */
-      border-radius: 4px;
-      font-size: 0.9em; /* Smaller font size */
-      position: absolute; /* Position relative to its parent (editor-container) */
-      bottom: 3px; /* Adjusted as needed, e.g., above status bar */
-      right: 3px;
-      z-index: 50;
-      opacity: 0;
-      transition: opacity 0.1s ease-in-out;
-      pointer-events: none; /* Allows clicks to pass through */
-      display: none; /* Hidden by default */
-    }
-
-    #key-logging-display.show-key-log {
-      opacity: 1;
-      display: block;
     }
   </style>
 </head>
-<body>
+<body class="vs-dark">
   <div id="loading-overlay">
     <div class="spinner"></div>
   </div>
 
   <div id="app">
-    <div id="sidebar">
-      <button id="new-file-btn" title="New File" aria-label="New File">
+    <aside id="sidebar" role="navigation" aria-label="Editor Tools">
+      <button id="new-file-btn" title="New File" aria-label="Create New File">
         <span class="codicon codicon-new-file"></span>
       </button>
-      <button id="open-file-btn" title="Open File" aria-label="Open File">
+      <button id="open-file-btn" title="Open File" aria-label="Open File from Device">
         <span class="codicon codicon-folder-opened"></span>
       </button>
-      <button id="save-cache-btn" title="Save to Cache" aria-label="Save to Cache">
+      <button id="save-cache-btn" title="Save to Cache" aria-label="Save Current Content to Cache">
         <span class="codicon codicon-save"></span>
       </button>
-      <button id="download-btn" title="Download Code" aria-label="Download Code">
+      <button id="download-btn" title="Download Code" aria-label="Download Code to File">
         <span class="codicon codicon-cloud-download"></span>
       </button>
-      <hr style="width: 80%; border: 0; border-top: 1px solid #444444; margin: 5px 0;" />
+      <div class="sidebar-separator"></div>
       <div id="language-select-wrapper">
-        <span class="codicon codicon-file-code"></span>
+        <span class="codicon codicon-file-code" aria-hidden="true"></span>
+        <label for="language-select" class="sr-only">Select Programming Language</label>
         <select id="language-select" title="Select Language" aria-label="Select Programming Language">
           <option value="javascript">JS</option>
           <option value="typescript">TS</option>
@@ -808,8 +742,9 @@
         </select>
       </div>
       <div id="font-size-select-wrapper">
-        <span class="codicon codicon-text-size"></span>
-        <select id="font-size-select" title="Font Size" aria-label="Select Font Size">
+        <span class="codicon codicon-text-size" aria-hidden="true"></span>
+        <label for="font-size-select" class="sr-only">Select Font Size</label>
+        <select id="font-size-select" title="Font Size" aria-label="Select Editor Font Size">
           <option value="7">7px</option>
           <option value="9">9px</option>
           <option value="10" selected>10px</option>
@@ -821,52 +756,53 @@
           <option value="24">24px</option>
         </select>
       </div>
-      <hr style="width: 80%; border: 0; border-top: 1px solid #444444; margin: 5px 0;" />
-      <button id="copy-all-btn" title="Copy All Code" aria-label="Copy All Code">
+      <div class="sidebar-separator"></div>
+      <button id="copy-all-btn" title="Copy All Code" aria-label="Copy All Editor Content">
         <span class="codicon codicon-copy"></span>
       </button>
-      <button id="format-code-btn" title="Format Code" aria-label="Format Code">
+      <button id="format-code-btn" title="Format Code" aria-label="Format Document Code">
         <span class="codicon codicon-symbol-ruler"></span>
       </button>
-      <hr style="width: 80%; border: 0; border-top: 1px solid #444444; margin: 5px 0;" />
-      <button id="find-replace-btn" title="Find/Replace" aria-label="Find Text">
+      <div class="sidebar-separator"></div>
+      <button id="find-replace-btn" title="Find/Replace" aria-label="Open Find and Replace Panel">
         <span class="codicon codicon-search"></span>
       </button>
       <button id="toggle-word-wrap-btn" title="Toggle Word Wrap" aria-label="Toggle Word Wrap">
         <span class="codicon codicon-word-wrap"></span>
       </button>
-      <button id="diff-view-btn" title="Compare with Original" aria-label="Compare Code with Original">
+      <button id="diff-view-btn" title="Compare with Original" aria-label="Compare Current Code with Saved Original">
         <span class="codicon codicon-diff"></span>
       </button>
-      <button id="theme-toggle-btn" title="Toggle Theme" aria-label="Toggle Editor Theme">
+      <button id="theme-toggle-btn" title="Toggle Theme" aria-label="Toggle Editor Color Theme (Dark/Light)">
         <span class="codicon codicon-lightbulb"></span>
       </button>
-      <hr style="width: 80%; border: 0; border-top: 1px solid #444444; margin: 5px 0;" />
+      <div class="sidebar-separator"></div>
       <button id="toggle-minimap-btn" title="Toggle Minimap" aria-label="Toggle Code Minimap">
         <span class="codicon codicon-map"></span>
       </button>
-      <button id="toggle-line-numbers-btn" title="Toggle Line Numbers" aria-label="Toggle Line Numbers">
+      <button id="toggle-line-numbers-btn" title="Toggle Line Numbers" aria-label="Toggle Display of Line Numbers">
         <span class="codicon codicon-list-ordered"></span>
       </button>
-      <button id="read-only-mode-btn" title="Toggle Read-Only Mode" aria-label="Toggle Read-Only Mode">
+      <button id="read-only-mode-btn" title="Toggle Read-Only Mode" aria-label="Toggle Editor Read-Only Mode">
         <span class="codicon codicon-lock"></span>
       </button>
       <button id="clear-editor-btn" title="Clear Editor" aria-label="Clear All Editor Content">
         <span class="codicon codicon-clear-all"></span>
       </button>
-    </div>
-    <div id="editor-container">
-      <div id="editor-toolbar">
-        <button id="toggle-sidebar-btn" title="Toggle Sidebar" aria-label="Toggle Sidebar">
+    </aside>
+    <main id="editor-container" role="main" aria-label="Code Editor">
+      <header id="editor-toolbar" role="toolbar" aria-label="Editor Actions">
+        <button id="toggle-sidebar-btn" title="Toggle Sidebar" aria-label="Toggle Navigation Sidebar">
             <span class="codicon codicon-three-bars"></span>
         </button>
         <button id="undo-btn" title="Undo" aria-label="Undo Last Action">
-          <span class="codicon codicon-arrow-left"></span> </button>
+          <span class="codicon codicon-arrow-left"></span>
+        </button>
         <button id="redo-btn" title="Redo" aria-label="Redo Last Action">
           <span class="codicon codicon-arrow-right"></span>
         </button>
-        <div style="flex-grow: 1;"></div> 
-        <button id="maximize-minimize-btn" title="Maximize/Minimize Window" aria-label="Maximize/Minimize Window">
+        <div style="flex-grow: 1;"></div>
+        <button id="maximize-minimize-btn" title="Toggle Fullscreen" aria-label="Toggle Editor Fullscreen Mode">
           <span class="codicon codicon-screen-full"></span>
         </button>
         <button id="cursor-up-btn" title="Move Cursor Up" aria-label="Move Cursor Up">
@@ -881,43 +817,43 @@
         <button id="cursor-right-btn" title="Move Cursor Right" aria-label="Move Cursor Right">
             <span class="codicon codicon-arrow-right"></span>
         </button>
-      </div>
-      <div id="container"></div>
+      </header>
+      <div id="container" role="code" aria-multiline="true"></div>
       <div class="read-only-overlay" id="read-only-overlay">
-        <span class="codicon codicon-lock"></span> READ-ONLY
+        <span class="codicon codicon-lock" aria-hidden="true"></span> READ-ONLY
       </div>
-      <div id="status-bar">
-        <span><span class="codicon codicon-symbol-text" aria-hidden="true"></span> <span id="lang-display" aria-live="polite">javascript</span></span>
-        <span><span class="codicon codicon-pencil" aria-hidden="true"></span> <span id="cursor-pos" aria-live="polite">Ln 1, Col 1</span></span>
+      <footer id="status-bar" role="contentinfo">
+        <span id="lang-display-wrapper"><span class="codicon codicon-symbol-text" aria-hidden="true"></span> <span id="lang-display" aria-live="polite">javascript</span></span>
+        <span id="cursor-pos-wrapper"><span class="codicon codicon-pencil" aria-hidden="true"></span> <span id="cursor-pos" aria-live="polite">Ln 1, Col 1</span></span>
         <span id="word-char-count" aria-live="polite"><span class="codicon codicon-text-size" aria-hidden="true"></span> Words: 0 | Chars: 0</span>
-        <span id="error-status" style="color: #f44336; margin-left: auto; display: none;" aria-live="polite" role="status"><span class="codicon codicon-error" aria-hidden="true"></span> Errors: 0</span>
-      </div>
-      <div id="key-logging-display" class="toast" role="status" aria-live="polite"></div>
-    </div>
-    <div id="diff-container">
-      <div id="diff-toolbar">
-        <button id="close-diff-btn" title="Close Diff View" aria-label="Close Diff View">
+        <span id="error-status" style="color: var(--toast-error); margin-left: auto; display: none;" aria-live="polite" role="status"><span class="codicon codicon-error" aria-hidden="true"></span> Errors: 0</span>
+      </footer>
+      <div id="key-logging-display" class="key-log-toast" role="status" aria-live="polite"></div>
+    </main>
+    <div id="diff-container" role="dialog" aria-label="Code Comparison View">
+      <div id="diff-toolbar" role="toolbar" aria-label="Diff View Actions">
+        <button id="close-diff-btn" title="Close Diff View" aria-label="Close Code Comparison View">
           <span class="codicon codicon-close" aria-hidden="true"></span> Close Diff
         </button>
         <button id="accept-changes-btn" title="Accept Changes" aria-label="Accept Changes from Diff View">
           <span class="codicon codicon-check" aria-hidden="true"></span> Accept Changes
         </button>
       </div>
-      <div id="diff-editor"></div>
+      <div id="diff-editor" role="code" aria-multiline="true" aria-label="Original vs Modified Code"></div>
     </div>
   </div>
   <div id="custom-context-menu" role="menu" aria-hidden="true">
     <button id="context-copy-btn" role="menuitem" aria-label="Copy Selected Text"><span class="codicon codicon-copy" aria-hidden="true"></span> Copy</button>
     <button id="context-paste-btn" role="menuitem" aria-label="Paste Text"><span class="codicon codicon-paste" aria-hidden="true"></span> Paste</button>
     <button id="context-cut-btn" role="menuitem" aria-label="Cut Selected Text"><span class="codicon codicon-cut" aria-hidden="true"></span> Cut</button>
-    <hr style="width: 80%; border: 0; border-top: 1px solid #444444; margin: 3px auto;" />
+    <div class="context-menu-separator"></div>
     <button id="context-format-btn" role="menuitem" aria-label="Format Selection or Document"><span class="codicon codicon-symbol-ruler" aria-hidden="true"></span> Format Selection</button>
-    <hr style="width: 80%; border: 0; border-top: 1px solid #444444; margin: 3px auto;" />
+    <div class="context-menu-separator"></div>
     <button id="context-select-all-btn" role="menuitem" aria-label="Select All Text"><span class="codicon codicon-whole-word" aria-hidden="true"></span> Select All</button>
   </div>
   <div id="toast-message" class="toast" role="alert" aria-live="assertive"></div>
 
-  <div id="custom-alert-modal-overlay" class="custom-modal-overlay" aria-modal="true" role="dialog">
+  <div id="custom-alert-modal-overlay" class="custom-modal-overlay" aria-modal="true" role="dialog" aria-labelledby="alert-modal-title">
     <div class="custom-modal">
       <h3 id="alert-modal-title"></h3>
       <p id="alert-modal-message"></p>
@@ -927,7 +863,7 @@
     </div>
   </div>
 
-  <div id="custom-confirm-modal-overlay" class="custom-modal-overlay" aria-modal="true" role="dialog">
+  <div id="custom-confirm-modal-overlay" class="custom-modal-overlay" aria-modal="true" role="dialog" aria-labelledby="confirm-modal-title">
     <div class="custom-modal">
       <h3 id="confirm-modal-title"></h3>
       <p id="confirm-modal-message"></p>
@@ -938,11 +874,12 @@
     </div>
   </div>
 
-  <div id="custom-prompt-modal-overlay" class="custom-modal-overlay" aria-modal="true" role="dialog">
+  <div id="custom-prompt-modal-overlay" class="custom-modal-overlay" aria-modal="true" role="dialog" aria-labelledby="prompt-modal-title">
     <div class="custom-modal">
       <h3 id="prompt-modal-title"></h3>
       <p id="prompt-modal-message"></p>
-      <input type="text" id="prompt-modal-input" />
+      <label for="prompt-modal-input" class="sr-only" id="prompt-modal-input-label">Enter value</label>
+      <input type="text" id="prompt-modal-input" aria-labelledby="prompt-modal-input-label" />
       <div class="custom-modal-buttons">
         <button class="cancel-btn" id="prompt-modal-cancel-btn">Cancel</button>
         <button class="confirm-btn" id="prompt-modal-confirm-btn">Submit</button>
@@ -952,149 +889,101 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
   <script>
-    // PWA: Register Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(registration => {
-            console.log('Service Worker registered with scope:', registration.scope);
-          })
-          .catch(error => {
-            console.error('Service Worker registration failed:', error);
-          });
-      });
-    }
-
-    // Arbo Editor Setup
-    window.MonacoEnvironment = {
-      getWorkerUrl: function (workerId, label) {
-        return `data:text/javascript;charset=utf-8,importScripts('https://unpkg.com/monaco-editor@0.52.0/min/vs/base/worker/workerMain.js');`;
-      }
-    };
-
-    let editorInstance = null;
-    let diffEditorInstance = null;
-    let originalModel = null;
-    let currentLanguage = localStorage.getItem('arboEditorLanguage') || 'javascript';
-    let currentTheme = localStorage.getItem('arboEditorTheme') || 'vs-dark';
-    let isWordWrapEnabled = localStorage.getItem('arboEditorWordWrap') === 'true';
-    let isMinimapEnabled = localStorage.getItem('arboEditorMinimap') !== 'false';
-    let areLineNumbersEnabled = localStorage.getItem('arboEditorLineNumbers') !== 'false';
-    let isReadOnlyMode = localStorage.getItem('arboEditorReadOnly') === 'true';
-    let lastAutosaveContent = '';
-    let isMaximized = false; // Tracks maximization state
-    let isSidebarCollapsed = false; // New state for sidebar
-
-    // Cache Storage Setup
-    const CACHE_NAME = 'arbo-editor-content-cache';
-    const CACHE_KEY = 'current-arbo-editor-content';
-
-    require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.52.0/min/vs' } });
-    require(['vs/editor/editor.main'], function () {
-      // --- Initialize Arbo Editor ---
-      async function initializeEditor() {
-        const loadingOverlay = document.getElementById('loading-overlay');
-        const app = document.getElementById('app');
-
-        // Show loading spinner
-        loadingOverlay.classList.remove('hidden');
-
-        const initialFontSize = parseInt(localStorage.getItem('arboEditorFontSize')) || 10;
-        // Load content from cache first, then localStorage, then default
-        let initialContent = await loadFromCache();
-        if (initialContent === null) { // If not found in cache
-            initialContent = localStorage.getItem('arboEditorContent') || '// Start coding in Arbo Editor!\nfunction greet() {\n  console.log("Hello, world!");\n}';
-        }
-        lastAutosaveContent = initialContent; // Set for initial comparison
-
-        editorInstance = monaco.editor.create(document.getElementById('container'), {
-          value: initialContent,
-          language: currentLanguage,
-          theme: currentTheme,
-          automaticLayout: true,
-          minimap: { enabled: isMinimapEnabled },
-          scrollBeyondLastLine: false,
-          fontSize: initialFontSize,
-          lineNumbers: areLineNumbersEnabled ? 'on' : 'off',
-          wordWrap: isWordWrapEnabled ? 'on' : 'off',
-          tabSize: 2,
-          renderWhitespace: 'none', // Keep consistent with existing
-          contextmenu: false, // Custom context menu will handle this
-          quickSuggestions: true,
-          autoClosingBrackets: 'always',
-          autoClosingQuotes: 'always',
-          autoIndent: 'full',
-          formatOnPaste: true,
-          formatOnType: true,
-          folding: true,
-          smoothScrolling: true,
-          readOnly: isReadOnlyMode,
-          mouseWheelScrollSensitivity: 2.0
+    // Self-executing anonymous function (IIFE) to encapsulate all variables and functions
+    (function() {
+      // PWA: Register Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+              console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch(error => {
+              console.error('Service Worker registration failed:', error);
+              showToast('Service Worker registration failed. Offline features may be limited.', 'error');
+            });
         });
-
-        // Create original model for diff view; ensure it reflects initial content
-        originalModel = monaco.editor.createModel(initialContent, currentLanguage);
-
-        // Set initial UI values from localStorage or defaults
-        document.getElementById('language-select').value = currentLanguage;
-        document.getElementById('lang-display').textContent = currentLanguage;
-        document.getElementById('font-size-select').value = initialFontSize;
-
-        // Set initial active states for toggle buttons
-        document.getElementById('toggle-word-wrap-btn').classList.toggle('active', isWordWrapEnabled);
-        document.getElementById('toggle-minimap-btn').classList.toggle('active', isMinimapEnabled);
-        document.getElementById('toggle-line-numbers-btn').classList.toggle('active', areLineNumbersEnabled);
-        document.getElementById('read-only-mode-btn').classList.toggle('active', isReadOnlyMode);
-        document.getElementById('read-only-overlay').classList.toggle('visible', isReadOnlyMode);
-        document.getElementById('theme-toggle-btn').classList.toggle('active', currentTheme === 'vs-dark'); // Active if dark theme
-
-        // Set CSS variables for overlay positioning dynamically
-        const editorToolbarHeight = document.getElementById('editor-toolbar').offsetHeight;
-        const statusBarHeight = document.getElementById('status-bar').offsetHeight;
-        document.documentElement.style.setProperty('--toolbar-height', `${editorToolbarHeight}px`);
-        document.documentElement.style.setProperty('--status-bar-height', `${statusBarHeight}px`);
-
-        // Initialize status bar
-        updateErrorStatus();
-        updateWordCharCount();
-        updateCursorPosition(); // Initial cursor position
-
-        // Hide loading spinner and show app
-        loadingOverlay.classList.add('hidden');
-        app.classList.add('loaded');
       }
 
-      // --- Cache Storage Functions ---
-      async function saveToCache(content, showUserToast = true) {
-        try {
-          const cache = await caches.open(CACHE_NAME);
-          const response = new Response(content, {
-            headers: { 'Content-Type': 'text/plain' }
-          });
-          await cache.put(CACHE_KEY, response);
-          if (showUserToast) {
-            showToast('Content saved to Arbo Editor cache!', 'success');
-          }
-        } catch (err) {
-          console.error('Cache save error:', err);
-          showToast('Failed to save to Arbo Editor cache. Check console for details.', 'error');
+      // Monaco Editor Environment Setup
+      window.MonacoEnvironment = {
+        getWorkerUrl: function (workerId, label) {
+          return `data:text/javascript;charset=utf-8,importScripts('https://unpkg.com/monaco-editor@0.52.0/min/vs/base/worker/workerMain.js');`;
         }
-      }
+      };
 
-      async function loadFromCache() {
-        try {
-          const cache = await caches.open(CACHE_NAME);
-          const response = await cache.match(CACHE_KEY);
-          if (response) {
-            return await response.text();
-          }
-          return null; // Return null if not found
-        } catch (err) {
-          console.error('Cache load error:', err);
-          // Fallback to localStorage or default if cache fails
-          return null;
-        }
-      }
+      // --- Global State Variables (within IIFE scope) ---
+      let editorInstance = null;
+      let diffEditorInstance = null;
+      let originalModel = null; // Stores content for diffing
+      let currentLanguage = localStorage.getItem('arboEditorLanguage') || 'javascript';
+      let currentTheme = localStorage.getItem('arboEditorTheme') || 'vs-dark';
+      let isWordWrapEnabled = localStorage.getItem('arboEditorWordWrap') === 'true';
+      let isMinimapEnabled = localStorage.getItem('arboEditorMinimap') !== 'false';
+      let areLineNumbersEnabled = localStorage.getItem('arboEditorLineNumbers') !== 'false';
+      let isReadOnlyMode = localStorage.getItem('arboEditorReadOnly') === 'true';
+      let lastAutosaveContent = ''; // To prevent unnecessary cache writes
+      let isMaximized = false;
+      let isSidebarCollapsed = false;
+
+      // Cache Storage Constants
+      const CACHE_NAME = 'arbo-editor-content-cache-v1'; // Increment version on breaking changes
+      const CACHE_KEY = 'current-arbo-editor-content';
+
+      // --- DOM Element References ---
+      const app = document.getElementById('app');
+      const loadingOverlay = document.getElementById('loading-overlay');
+      const sidebar = document.getElementById('sidebar');
+      const editorContainer = document.getElementById('editor-container');
+      const editorToolbar = document.getElementById('editor-toolbar');
+      const container = document.getElementById('container');
+      const statusBar = document.getElementById('status-bar');
+      const readOnlyOverlay = document.getElementById('read-only-overlay');
+      const langDisplay = document.getElementById('lang-display');
+      const cursorPosDisplay = document.getElementById('cursor-pos');
+      const wordCharCountDisplay = document.getElementById('word-char-count');
+      const errorStatusDisplay = document.getElementById('error-status');
+      const languageSelect = document.getElementById('language-select');
+      const fontSizeSelect = document.getElementById('font-size-select');
+      const themeToggleBtn = document.getElementById('theme-toggle-btn');
+      const toggleWordWrapBtn = document.getElementById('toggle-word-wrap-btn');
+      const toggleMinimapBtn = document.getElementById('toggle-minimap-btn');
+      const toggleLineNumbersBtn = document.getElementById('toggle-line-numbers-btn');
+      const readOnlyModeBtn = document.getElementById('read-only-mode-btn');
+      const maximizeMinimizeBtn = document.getElementById('maximize-minimize-btn');
+      const maximizeMinimizeIcon = maximizeMinimizeBtn.querySelector('.codicon');
+      const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
+      const formatCodeBtn = document.getElementById('format-code-btn');
+      const diffContainer = document.getElementById('diff-container');
+      const diffEditorDiv = document.getElementById('diff-editor');
+      const keyLogDisplay = document.getElementById('key-logging-display');
+
+      // Context Menu Elements
+      const customContextMenu = document.getElementById('custom-context-menu');
+      const contextCopyBtn = document.getElementById('context-copy-btn');
+      const contextPasteBtn = document.getElementById('context-paste-btn');
+      const contextCutBtn = document.getElementById('context-cut-btn');
+      const contextSelectAllBtn = document.getElementById('context-select-all-btn');
+      const contextFormatBtn = document.getElementById('context-format-btn');
+
+      // Custom Modal Elements
+      const customAlertModalOverlay = document.getElementById('custom-alert-modal-overlay');
+      const alertModalTitle = document.getElementById('alert-modal-title');
+      const alertModalMessage = document.getElementById('alert-modal-message');
+      const alertModalOkBtn = document.getElementById('alert-modal-ok-btn');
+
+      const customConfirmModalOverlay = document.getElementById('custom-confirm-modal-overlay');
+      const confirmModalTitle = document.getElementById('confirm-modal-title');
+      const confirmModalMessage = document.getElementById('confirm-modal-message');
+      const confirmModalConfirmBtn = document.getElementById('confirm-modal-confirm-btn');
+      const confirmModalCancelBtn = document.getElementById('confirm-modal-cancel-btn');
+
+      const customPromptModalOverlay = document.getElementById('custom-prompt-modal-overlay');
+      const promptModalTitle = document.getElementById('prompt-modal-title');
+      const promptModalMessage = document.getElementById('prompt-modal-message');
+      const promptModalInput = document.getElementById('prompt-modal-input');
+      const promptModalConfirmBtn = document.getElementById('prompt-modal-confirm-btn');
+      const promptModalCancelBtn = document.getElementById('prompt-modal-cancel-btn');
 
       // --- Utility Functions ---
       let toastTimeout;
@@ -1105,12 +994,12 @@
        */
       function showToast(message, type = 'info') {
         const toast = document.getElementById('toast-message');
-        clearTimeout(toastTimeout); // Clear any existing toast timeout to prevent stacking issues
+        clearTimeout(toastTimeout);
         toast.textContent = message;
-        toast.className = `toast show ${type}`; // Reset classes and add new ones
+        toast.className = `toast show ${type}`;
         toastTimeout = setTimeout(() => {
           toast.classList.remove('show');
-        }, 2000); // 2 seconds
+        }, 3000); // Increased duration to 3 seconds for better readability
       }
 
       let keyLogTimeout;
@@ -1119,13 +1008,12 @@
        * @param {string} key - The key pressed.
        */
       function showKeyLog(key) {
-        const keyLogDisplay = document.getElementById('key-logging-display');
-        clearTimeout(keyLogTimeout); // Clear any existing key log timeout
+        clearTimeout(keyLogTimeout);
         keyLogDisplay.textContent = `Key: "${key}"`;
         keyLogDisplay.classList.add('show-key-log');
         keyLogTimeout = setTimeout(() => {
           keyLogDisplay.classList.remove('show-key-log');
-        }, 300); // 300 milliseconds duration
+        }, 500); // Slightly longer duration for visibility
       }
 
       /**
@@ -1155,7 +1043,7 @@
           xml: 'xml', ruby: 'rb', go: 'go', swift: 'swift', kotlin: 'kt',
           rust: 'rs', sql: 'sql', yaml: 'yml', toml: 'toml', powershell: 'ps1',
           dockerfile: 'dockerfile', cpp: 'cpp', c: 'c', 'objective-c': 'm',
-          perl: 'pl', r: 'r', sh: 'sh', plaintext: 'txt'
+          perl: 'pl', r: 'r', shell: 'sh', plaintext: 'txt'
         };
         return extensions[lang] || 'txt';
       }
@@ -1181,21 +1069,16 @@
       /**
        * Checks if a language has a formatter available.
        * @param {string} languageId - The Monaco language ID.
-       * @returns {boolean} True if formatting is supported, false otherwise.
+       * @returns {Promise<boolean>} True if formatting is supported, false otherwise.
        */
       async function canFormatLanguage(languageId) {
-        // Monaco's formatters are usually available synchronous after language is loaded,
-        // but using a promise ensures it handles async loading if any.
-        const formatters = monaco.languages.getLanguages().find(lang => lang.id === languageId)?.languageFeatures.documentFormattingEditProvider;
-        return !!formatters;
+        // Use a small delay to ensure language features are registered
+        await new Promise(resolve => setTimeout(resolve, 50));
+        const language = monaco.languages.getLanguages().find(lang => lang.id === languageId);
+        return language && language.languageFeatures && language.languageFeatures.documentFormattingEditProvider;
       }
 
       // --- Custom Modals ---
-      const customAlertModalOverlay = document.getElementById('custom-alert-modal-overlay');
-      const alertModalTitle = document.getElementById('alert-modal-title');
-      const alertModalMessage = document.getElementById('alert-modal-message');
-      const alertModalOkBtn = document.getElementById('alert-modal-ok-btn');
-
       /**
        * Shows a custom alert modal.
        * @param {string} title - The title of the alert.
@@ -1207,7 +1090,7 @@
           alertModalTitle.textContent = title;
           alertModalMessage.textContent = message;
           customAlertModalOverlay.classList.add('visible');
-          alertModalOkBtn.focus(); // Focus the OK button for accessibility
+          alertModalOkBtn.focus();
 
           const cleanup = () => {
             customAlertModalOverlay.classList.remove('visible');
@@ -1228,12 +1111,6 @@
         });
       }
 
-      const customConfirmModalOverlay = document.getElementById('custom-confirm-modal-overlay');
-      const confirmModalTitle = document.getElementById('confirm-modal-title');
-      const confirmModalMessage = document.getElementById('confirm-modal-message');
-      const confirmModalConfirmBtn = document.getElementById('confirm-modal-confirm-btn');
-      const confirmModalCancelBtn = document.getElementById('confirm-modal-cancel-btn');
-
       /**
        * Shows a custom confirmation modal.
        * @param {string} title - The title of the confirmation.
@@ -1245,7 +1122,7 @@
           confirmModalTitle.textContent = title;
           confirmModalMessage.textContent = message;
           customConfirmModalOverlay.classList.add('visible');
-          confirmModalConfirmBtn.focus(); // Focus confirm button by default
+          confirmModalConfirmBtn.focus();
 
           const cleanup = (result) => {
             customConfirmModalOverlay.classList.remove('visible');
@@ -1271,13 +1148,6 @@
         });
       }
 
-      const customPromptModalOverlay = document.getElementById('custom-prompt-modal-overlay');
-      const promptModalTitle = document.getElementById('prompt-modal-title');
-      const promptModalMessage = document.getElementById('prompt-modal-message');
-      const promptModalInput = document.getElementById('prompt-modal-input');
-      const promptModalConfirmBtn = document.getElementById('prompt-modal-confirm-btn');
-      const promptModalCancelBtn = document.getElementById('prompt-modal-cancel-btn');
-
       /**
        * Shows a custom prompt modal.
        * @param {string} title - The title of the prompt.
@@ -1291,11 +1161,9 @@
           promptModalMessage.textContent = message;
           promptModalInput.value = defaultValue;
           customPromptModalOverlay.classList.add('visible');
-          promptModalInput.focus(); // Focus input field
+          promptModalInput.focus();
+          promptModalInput.select();
 
-          // Select all text in the input field on focus
-          promptModalInput.select(); 
-          
           const cleanup = (result) => {
             customPromptModalOverlay.classList.remove('visible');
             promptModalConfirmBtn.removeEventListener('click', onConfirmClick);
@@ -1320,66 +1188,167 @@
         });
       }
 
+      // --- Cache Storage Functions ---
+      async function saveToCache(content, showUserToast = true) {
+        try {
+          const cache = await caches.open(CACHE_NAME);
+          const response = new Response(content, {
+            headers: { 'Content-Type': 'text/plain' }
+          });
+          await cache.put(CACHE_KEY, response);
+          if (showUserToast) {
+            showToast('Content saved to Arbo Editor cache!', 'success');
+          }
+          lastAutosaveContent = content; // Update last autosaved content after successful save
+        } catch (err) {
+          console.error('Cache save error:', err);
+          showToast('Failed to save to Arbo Editor cache. Check console for details.', 'error');
+        }
+      }
+
+      async function loadFromCache() {
+        try {
+          const cache = await caches.open(CACHE_NAME);
+          const response = await cache.match(CACHE_KEY);
+          if (response) {
+            return await response.text();
+          }
+          return null;
+        } catch (err) {
+          console.error('Cache load error:', err);
+          return null;
+        }
+      }
+
       // --- Status Bar Updates ---
       function updateErrorStatus() {
         const model = editorInstance.getModel();
-        // Get all markers, not just errors
         const markers = monaco.editor.getModelMarkers({ resource: model.uri });
         const errorCount = markers.filter(marker => marker.severity === monaco.MarkerSeverity.Error).length;
-        const errorStatusDisplay = document.getElementById('error-status');
+
         if (errorCount > 0) {
           errorStatusDisplay.style.display = 'inline-flex';
           errorStatusDisplay.innerHTML = `<span class="codicon codicon-error" aria-hidden="true"></span> Errors: ${errorCount}`;
         } else {
-          errorStatusDisplay.style.display = 'none'; // Hide if no errors
+          errorStatusDisplay.style.display = 'none';
         }
       }
 
       const updateWordCharCount = debounce(() => {
         const text = editorInstance.getValue();
         const charCount = text.length;
-        // Split by any whitespace, filter empty strings from multiple spaces
         const wordCount = text.trim().split(/\s+/).filter(word => word.length > 0).length;
-        document.getElementById('word-char-count').innerHTML = `<span class="codicon codicon-text-size" aria-hidden="true"></span> Words: ${wordCount} | Chars: ${charCount}`;
-      }, 300); // Debounce to avoid frequent updates
+        wordCharCountDisplay.innerHTML = `<span class="codicon codicon-text-size" aria-hidden="true"></span> Words: ${wordCount} | Chars: ${charCount}`;
+      }, 300);
 
       function updateCursorPosition() {
         const pos = editorInstance.getPosition();
-        if (pos) { // Ensure position exists before accessing
-          document.getElementById('cursor-pos').textContent = `Ln ${pos.lineNumber}, Col ${pos.column}`;
+        if (pos) {
+          cursorPosDisplay.textContent = `Ln ${pos.lineNumber}, Col ${pos.column}`;
         }
       }
 
-      // --- Event Handlers ---
-      function setupEventListeners() {
-        const app = document.getElementById('app');
-        const editorContainer = document.getElementById('editor-container');
-        const maximizeMinimizeBtn = document.getElementById('maximize-minimize-btn');
-        const maximizeMinimizeIcon = maximizeMinimizeBtn.querySelector('.codicon');
-        const sidebar = document.getElementById('sidebar');
-        const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn'); // Get the new button
+      /**
+       * Updates the disabled state of the format buttons based on language support and selection.
+       */
+      async function updateFormatButtonState() {
+          const isFormatEnabled = await canFormatLanguage(currentLanguage);
+          formatCodeBtn.disabled = !isFormatEnabled || isReadOnlyMode;
+          // Context menu format button is disabled if no selection OR not supported OR read-only
+          contextFormatBtn.disabled = !isFormatEnabled || (editorInstance && editorInstance.getSelection().isEmpty()) || isReadOnlyMode;
+      }
 
+      // --- Core Editor Initialization ---
+      async function initializeEditor() {
+        // Show loading spinner
+        loadingOverlay.classList.remove('hidden');
+
+        const initialFontSize = parseInt(localStorage.getItem('arboEditorFontSize')) || 10;
+        let initialContent = await loadFromCache();
+        if (initialContent === null) {
+            initialContent = localStorage.getItem('arboEditorContent') || '// Start coding in Arbo Editor!\nfunction greet() {\n  console.log("Hello, world!");\n}';
+        }
+        lastAutosaveContent = initialContent; // Set initial content for diffing
+
+        // Set initial theme on the body for CSS variables
+        document.body.classList.toggle('vs-light', currentTheme === 'vs-light');
+
+        editorInstance = monaco.editor.create(container, {
+          value: initialContent,
+          language: currentLanguage,
+          theme: currentTheme,
+          automaticLayout: true,
+          minimap: { enabled: isMinimapEnabled },
+          scrollBeyondLastLine: false,
+          fontSize: initialFontSize,
+          lineNumbers: areLineNumbersEnabled ? 'on' : 'off',
+          wordWrap: isWordWrapEnabled ? 'on' : 'off',
+          tabSize: 2,
+          renderWhitespace: 'none',
+          contextmenu: false, // Custom context menu will handle this
+          quickSuggestions: true,
+          autoClosingBrackets: 'always',
+          autoClosingQuotes: 'always',
+          autoIndent: 'full',
+          formatOnPaste: true,
+          formatOnType: true,
+          folding: true,
+          smoothScrolling: true,
+          readOnly: isReadOnlyMode,
+          mouseWheelScrollSensitivity: 2.0
+        });
+
+        // Create original model for diff view. It will be updated with lastAutosaveContent when diff is opened.
+        originalModel = monaco.editor.createModel(initialContent, currentLanguage);
+
+        // Set initial UI values from localStorage or defaults
+        languageSelect.value = currentLanguage;
+        langDisplay.textContent = currentLanguage;
+        fontSizeSelect.value = initialFontSize;
+
+        // Set initial active states for toggle buttons
+        toggleWordWrapBtn.classList.toggle('active', isWordWrapEnabled);
+        toggleMinimapBtn.classList.toggle('active', isMinimapEnabled);
+        toggleLineNumbersBtn.classList.toggle('active', areLineNumbersEnabled);
+        readOnlyModeBtn.classList.toggle('active', isReadOnlyMode);
+        readOnlyOverlay.classList.toggle('visible', isReadOnlyMode);
+        themeToggleBtn.classList.toggle('active', currentTheme === 'vs-dark');
+
+        // Dynamically set CSS variables for precise overlay positioning
+        // Use requestAnimationFrame to ensure elements are rendered for accurate measurements
+        requestAnimationFrame(() => {
+          document.documentElement.style.setProperty('--toolbar-height', `${editorToolbar.offsetHeight}px`);
+          document.documentElement.style.setProperty('--status-bar-height', `${statusBar.offsetHeight}px`);
+        });
+
+        // Initialize status bar content
+        updateErrorStatus();
+        updateWordCharCount();
+        updateCursorPosition();
+        updateFormatButtonState();
+
+        // Hide loading spinner and show app
+        loadingOverlay.classList.add('hidden');
+        app.classList.add('loaded');
+      }
+
+      // --- Event Handlers and Listeners ---
+      function setupEventListeners() {
         // Maximize/Minimize Button
         maximizeMinimizeBtn.addEventListener('click', () => {
             isMaximized = !isMaximized;
-            
             app.classList.toggle('maximized-editor', isMaximized);
-            sidebar.classList.toggle('hidden', isMaximized); // Hide sidebar smoothly
-            
-            // Update icon and provide toast feedback
-            if (isMaximized) {
-                maximizeMinimizeIcon.classList.remove('codicon-screen-full');
-                maximizeMinimizeIcon.classList.add('codicon-screen-normal');
-                showToast('Arbo Editor maximized.', 'info');
-            } else {
-                maximizeMinimizeIcon.classList.remove('codicon-screen-normal');
-                maximizeMinimizeIcon.classList.add('codicon-screen-full');
-                showToast('Arbo Editor minimized.', 'info');
-            }
+            // Sidebar collapses when maximized, expands when minimized
+            sidebar.classList.toggle('collapsed', isMaximized);
 
-            // Important: Force layout of both editors after size change
+            maximizeMinimizeIcon.classList.toggle('codicon-screen-full', !isMaximized);
+            maximizeMinimizeIcon.classList.toggle('codicon-screen-normal', isMaximized);
+
+            showToast(`Arbo Editor ${isMaximized ? 'maximized' : 'minimized'}.`, 'info');
+
+            // Force layout of both editors after size change
             editorInstance.layout();
-            if (diffEditorInstance) { // Ensure diff editor exists before trying to layout
+            if (diffEditorInstance) {
                 diffEditorInstance.layout();
             }
         });
@@ -1388,210 +1357,176 @@
         toggleSidebarBtn.addEventListener('click', () => {
             isSidebarCollapsed = !isSidebarCollapsed;
             sidebar.classList.toggle('collapsed', isSidebarCollapsed);
-            
+
             // Re-layout editor(s) after sidebar size change
             editorInstance.layout();
             if (diffEditorInstance) {
                 diffEditorInstance.layout();
             }
 
-            showToast(`Sidebar ${isSidebarCollapsed ? 'Collapsed' : 'Expanded'}`, 'info');
+            showToast(`Sidebar ${isSidebarCollapsed ? 'collapsed' : 'expanded'}`, 'info');
         });
 
-
         // Language Selection
-        const languageSelect = document.getElementById('language-select');
-        const langDisplay = document.getElementById('lang-display');
         languageSelect.addEventListener('change', (event) => {
           currentLanguage = event.target.value;
           monaco.editor.setModelLanguage(editorInstance.getModel(), currentLanguage);
-          if (originalModel) { // Update original model language too for consistent diff view
-            monaco.editor.setModelLanguage(originalModel, currentLanguage);
+          if (originalModel) {
+            monaco.editor.setModelLanguage(originalModel, currentLanguage); // Keep original model language in sync
           }
           langDisplay.textContent = currentLanguage;
           localStorage.setItem('arboEditorLanguage', currentLanguage);
-          updateErrorStatus(); // Update error status for new language
-          showToast(`Arbo Editor language set to ${currentLanguage.toUpperCase()}`, 'info');
-          updateFormatButtonState(); // Update format button state for the new language
+          updateErrorStatus();
+          showToast(`Language set to ${currentLanguage.toUpperCase()}`, 'info');
+          updateFormatButtonState();
         });
 
         // Font Size Adjustment
-        const fontSizeSelect = document.getElementById('font-size-select');
         fontSizeSelect.addEventListener('change', (event) => {
           const newSize = parseInt(event.target.value);
           editorInstance.updateOptions({ fontSize: newSize });
-          if (diffEditorInstance) { // Apply to diff editor as well
+          if (diffEditorInstance) {
             diffEditorInstance.getOriginalEditor().updateOptions({ fontSize: newSize });
             diffEditorInstance.getModifiedEditor().updateOptions({ fontSize: newSize });
           }
           localStorage.setItem('arboEditorFontSize', newSize);
-          showToast(`Arbo Editor font size set to ${newSize}px`, 'info');
+          showToast(`Font size set to ${newSize}px`, 'info');
         });
 
         // Theme Toggling
-        document.getElementById('theme-toggle-btn').addEventListener('click', () => {
+        themeToggleBtn.addEventListener('click', () => {
           currentTheme = currentTheme === 'vs-dark' ? 'vs-light' : 'vs-dark';
           monaco.editor.setTheme(currentTheme);
-          if (diffEditorInstance) { // Apply to diff editor as well
+          document.body.classList.toggle('vs-light', currentTheme === 'vs-light'); // Update body class for CSS variables
+
+          if (diffEditorInstance) {
             diffEditorInstance.getOriginalEditor().updateOptions({ theme: currentTheme });
             diffEditorInstance.getModifiedEditor().updateOptions({ theme: currentTheme });
           }
           localStorage.setItem('arboEditorTheme', currentTheme);
-          document.getElementById('theme-toggle-btn').classList.toggle('active', currentTheme === 'vs-dark');
-          showToast(`Arbo Editor switched to ${currentTheme === 'vs-dark' ? 'Dark' : 'Light'} Theme`, 'info');
+          themeToggleBtn.classList.toggle('active', currentTheme === 'vs-dark');
+          showToast(`Switched to ${currentTheme === 'vs-dark' ? 'Dark' : 'Light'} Theme`, 'info');
         });
 
         // Word Wrap Toggling
-        document.getElementById('toggle-word-wrap-btn').addEventListener('click', () => {
+        toggleWordWrapBtn.addEventListener('click', () => {
           isWordWrapEnabled = !isWordWrapEnabled;
           editorInstance.updateOptions({ wordWrap: isWordWrapEnabled ? 'on' : 'off' });
-          if (diffEditorInstance) { // Apply to diff editor as well
+          if (diffEditorInstance) {
             diffEditorInstance.getOriginalEditor().updateOptions({ wordWrap: isWordWrapEnabled ? 'on' : 'off' });
             diffEditorInstance.getModifiedEditor().updateOptions({ wordWrap: isWordWrapEnabled ? 'on' : 'off' });
           }
           localStorage.setItem('arboEditorWordWrap', isWordWrapEnabled);
-          document.getElementById('toggle-word-wrap-btn').classList.toggle('active', isWordWrapEnabled);
-          showToast(`Arbo Editor Word Wrap ${isWordWrapEnabled ? 'Enabled' : 'Disabled'}`, 'info');
+          toggleWordWrapBtn.classList.toggle('active', isWordWrapEnabled);
+          showToast(`Word Wrap ${isWordWrapEnabled ? 'Enabled' : 'Disabled'}`, 'info');
         });
 
         // Undo/Redo
         document.getElementById('undo-btn').addEventListener('click', () => {
-          // Trigger actions only if editor is not in read-only mode
           if (!isReadOnlyMode) {
               editorInstance.trigger('source', 'undo', {});
-              showToast('Arbo Editor Undo performed', 'info');
+              showToast('Undo performed.', 'info');
           } else {
               showToast('Cannot undo in read-only mode.', 'info');
           }
         });
 
         document.getElementById('redo-btn').addEventListener('click', () => {
-          // Trigger actions only if editor is not in read-only mode
           if (!isReadOnlyMode) {
               editorInstance.trigger('source', 'redo', {});
-              showToast('Arbo Editor Redo performed', 'info');
+              showToast('Redo performed.', 'info');
           } else {
               showToast('Cannot redo in read-only mode.', 'info');
           }
         });
 
-        // Cursor Navigation (Ensuring focus after movement)
-        document.getElementById('cursor-up-btn').addEventListener('click', () => {
-            editorInstance.trigger('keyboard', 'cursorUp', {});
-            editorInstance.focus(); // Keep editor focused
-        });
-        document.getElementById('cursor-down-btn').addEventListener('click', () => {
-            editorInstance.trigger('keyboard', 'cursorDown', {});
-            editorInstance.focus();
-        });
-        document.getElementById('cursor-left-btn').addEventListener('click', () => {
-            editorInstance.trigger('keyboard', 'cursorLeft', {});
-            editorInstance.focus();
-        });
-        document.getElementById('cursor-right-btn').addEventListener('click', () => {
-            editorInstance.trigger('keyboard', 'cursorRight', {});
-            editorInstance.focus();
-        });
-
+        // Cursor Navigation
+        document.getElementById('cursor-up-btn').addEventListener('click', () => { editorInstance.trigger('keyboard', 'cursorUp', {}); editorInstance.focus(); });
+        document.getElementById('cursor-down-btn').addEventListener('click', () => { editorInstance.trigger('keyboard', 'cursorDown', {}); editorInstance.focus(); });
+        document.getElementById('cursor-left-btn').addEventListener('click', () => { editorInstance.trigger('keyboard', 'cursorLeft', {}); editorInstance.focus(); });
+        document.getElementById('cursor-right-btn').addEventListener('click', () => { editorInstance.trigger('keyboard', 'cursorRight', {}); editorInstance.focus(); });
 
         // Editor Status Updates
-        editorInstance.onDidChangeCursorPosition(updateCursorPosition); // Update on cursor change
+        editorInstance.onDidChangeCursorPosition(updateCursorPosition);
 
         const debounceSaveToCacheOnContentChange = debounce(async () => {
             const currentContent = editorInstance.getValue();
-            // Only save if content has actually changed since last autosave
             if (currentContent !== lastAutosaveContent) {
                 await saveToCache(currentContent, false); // Don't show toast for autosave
-                lastAutosaveContent = currentContent; // Update last autosaved content
             }
-        }, 1000); // Auto-save every 1 second after last change
+        }, 1000);
 
         editorInstance.onDidChangeModelContent(() => {
           updateErrorStatus();
           updateWordCharCount();
           debounceSaveToCacheOnContentChange();
-          // Update original model content only if it's the same model as the current one
-          // This prevents accidental overwrites if models are switched (e.g., in diff view)
-          if (originalModel && editorInstance.getModel() === originalModel) {
-            originalModel.setValue(editorInstance.getValue());
-          }
-          updateFormatButtonState(); // Update format button accessibility dynamically
+          // originalModel should NOT be updated here, it represents the *saved* state for diffing.
+          updateFormatButtonState();
         });
 
         // New File
         document.getElementById('new-file-btn').addEventListener('click', async () => {
-          // Prompt for confirmation to prevent accidental data loss
-          const confirmed = await showConfirm('New File in Arbo Editor', 'Are you sure you want to create a new file? Any unsaved changes will be lost.');
+          const confirmed = await showConfirm('New File', 'Are you sure you want to create a new file? Any unsaved changes will be lost.');
           if (confirmed) {
             editorInstance.setValue('');
-            if (originalModel) { // Ensure originalModel exists before updating
-              originalModel.setValue('');
-            }
-            currentLanguage = 'plaintext'; // Reset language to plaintext for a new file
+            if (originalModel) { originalModel.setValue(''); } // Reset original model for new file
+            currentLanguage = 'plaintext';
             monaco.editor.setModelLanguage(editorInstance.getModel(), currentLanguage);
             languageSelect.value = currentLanguage;
             langDisplay.textContent = currentLanguage;
-            localStorage.setItem('arboEditorLanguage', currentLanguage); // Persist language choice
-            await saveToCache(''); // Save empty content to cache
-            lastAutosaveContent = ''; // Reset last autosave content
-            showToast('New file created in Arbo Editor!', 'success');
+            localStorage.setItem('arboEditorLanguage', currentLanguage);
+            await saveToCache('');
+            showToast('New file created!', 'success');
             updateFormatButtonState();
           } else {
-            showToast('New file creation cancelled in Arbo Editor.', 'info');
+            showToast('New file creation cancelled.', 'info');
           }
         });
 
         // Clear Editor
         document.getElementById('clear-editor-btn').addEventListener('click', async () => {
-          const confirmed = await showConfirm('Clear Arbo Editor', 'Are you sure you want to clear the Arbo Editor content? This action cannot be undone.');
+          const confirmed = await showConfirm('Clear Editor', 'Are you sure you want to clear the editor content? This action cannot be undone.');
           if (confirmed) {
             editorInstance.setValue('');
-            if (originalModel) { // Ensure originalModel exists before updating
-              originalModel.setValue('');
-            }
-            await saveToCache(''); // Save empty content to cache
-            lastAutosaveContent = ''; // Reset last autosave content
-            showToast('Arbo Editor content cleared!', 'success');
+            if (originalModel) { originalModel.setValue(''); } // Reset original model
+            await saveToCache('');
+            showToast('Editor content cleared!', 'success');
             updateFormatButtonState();
           } else {
-            showToast('Clear Arbo Editor cancelled.', 'info');
+            showToast('Clear editor cancelled.', 'info');
           }
         });
 
         // Save to Cache (explicit save)
         document.getElementById('save-cache-btn').addEventListener('click', async () => {
           const content = editorInstance.getValue();
-          await saveToCache(content, true); // Show toast for explicit save
-          if (originalModel) {
-              originalModel.setValue(content); // Update original model to match current
-          }
-          lastAutosaveContent = content; // Update last autosaved content
+          await saveToCache(content, true);
+          if (originalModel) { originalModel.setValue(content); } // Update original model to match current saved state
         });
 
         // Download Code
         document.getElementById('download-btn').addEventListener('click', async () => {
           const code = editorInstance.getValue();
-          // Provide a sensible default filename
           const defaultFileName = `untitled.${getExtensionForLanguage(currentLanguage)}`;
-          const fileName = await showPrompt('Download Code from Arbo Editor', 'Enter desired file name:', defaultFileName);
-          if (fileName) { // Only proceed if a filename was provided (not null from cancel)
+          const fileName = await showPrompt('Download Code', 'Enter desired file name:', defaultFileName);
+          if (fileName) {
             try {
-              const blob = new Blob([code], { type: 'text/plain' }); // Using 'text/plain' as a generic fallback
+              const blob = new Blob([code], { type: 'text/plain' });
               const url = URL.createObjectURL(blob);
               const a = document.createElement('a');
               a.href = url;
-              a.download = fileName; // Set the user-provided filename
-              document.body.appendChild(a); // Append to body to make it clickable
-              a.click(); // Trigger download
-              document.body.removeChild(a); // Clean up
-              URL.revokeObjectURL(url); // Release object URL
-              showToast(`File "${fileName}" downloaded from Arbo Editor!`, 'success');
+              a.download = fileName;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+              showToast(`File "${fileName}" downloaded!`, 'success');
             } catch (err) {
               console.error('Download error:', err);
-              showToast('Failed to download file from Arbo Editor.', 'error');
+              showToast('Failed to download file.', 'error');
             }
           } else {
-            showToast('Download cancelled in Arbo Editor.', 'info');
+            showToast('Download cancelled.', 'info');
           }
         });
 
@@ -1599,15 +1534,13 @@
         document.getElementById('open-file-btn').addEventListener('click', () => {
           const input = document.createElement('input');
           input.type = 'file';
-          // Define a comprehensive list of accepted file types and their extensions
           input.accept = '.js,.ts,.html,.css,.json,.py,.java,.cs,.php,.md,.xml,.rb,.go,.swift,.kt,.rs,.sql,.yml,.toml,.ps1,.dockerfile,.c,.cpp,.m,.pl,.r,.sh,.txt,text/*,application/json';
           input.onchange = async (e) => {
             const file = e.target.files[0];
             if (file) {
-              // Confirm before opening a new file to prevent data loss
-              const confirmed = await showConfirm('Open File in Arbo Editor', `Opening "${file.name}" will replace current editor content. Continue?`);
+              const confirmed = await showConfirm('Open File', `Opening "${file.name}" will replace current editor content. Continue?`);
               if (!confirmed) {
-                  showToast('File open cancelled in Arbo Editor.', 'info');
+                  showToast('File open cancelled.', 'info');
                   return;
               }
 
@@ -1617,14 +1550,11 @@
                   const fileContent = event.target.result;
                   editorInstance.setValue(fileContent);
                   originalModel.setValue(fileContent); // Update original model for diff
-                  lastAutosaveContent = fileContent; // Update last autosave content
 
                   const fileNameParts = file.name.split('.');
-                  const fileExtension = fileNameParts.length > 1 ? fileNameParts.pop().toLowerCase() : 'txt'; // Handle files without extension
-                  
+                  const fileExtension = fileNameParts.length > 1 ? fileNameParts.pop().toLowerCase() : 'txt';
                   const detectedLanguage = getLanguageFromExtension(fileExtension);
-                  
-                  // Check if the detected language is supported by Monaco Editor
+
                   const supportedLanguages = monaco.languages.getLanguages().map(lang => lang.id);
                   if (supportedLanguages.includes(detectedLanguage)) {
                     currentLanguage = detectedLanguage;
@@ -1633,47 +1563,36 @@
                     languageSelect.value = currentLanguage;
                     langDisplay.textContent = currentLanguage;
                     localStorage.setItem('arboEditorLanguage', currentLanguage);
-                    await saveToCache(fileContent); // Auto-save opened file to cache
-                    showToast(`Opened "${file.name}" in Arbo Editor as ${currentLanguage.toUpperCase()}`, 'success');
+                    await saveToCache(fileContent);
+                    showToast(`Opened "${file.name}" as ${currentLanguage.toUpperCase()}`, 'success');
                   } else {
-                    currentLanguage = 'plaintext'; // Fallback to plaintext
+                    currentLanguage = 'plaintext';
                     monaco.editor.setModelLanguage(editorInstance.getModel(), currentLanguage);
                     monaco.editor.setModelLanguage(originalModel, currentLanguage);
                     languageSelect.value = currentLanguage;
                     langDisplay.textContent = currentLanguage;
                     localStorage.setItem('arboEditorLanguage', currentLanguage);
-                    await saveToCache(fileContent); // Auto-save opened file to cache
-                    showToast(`Opened "${file.name}" in Arbo Editor (language not detected, set to Plain Text)`, 'info');
+                    await saveToCache(fileContent);
+                    showToast(`Opened "${file.name}" (language not detected, set to Plain Text)`, 'info');
                   }
-                  updateFormatButtonState(); // Update format button for the new language
+                  updateFormatButtonState();
                 };
                 reader.onerror = () => {
-                  showToast('Failed to read file in Arbo Editor. Check file permissions.', 'error');
+                  showToast('Failed to read file. Check file permissions.', 'error');
                 };
                 reader.readAsText(file);
               } catch (err) {
-                showToast('Error opening file in Arbo Editor. Check console for details.', 'error');
+                showToast('Error opening file. Check console for details.', 'error');
                 console.error('File open error:', err);
               }
             } else {
-                showToast('No file selected to open in Arbo Editor.', 'info');
+                showToast('No file selected to open.', 'info');
             }
           };
-          input.click(); // Programmatically click the hidden file input
+          input.click();
         });
 
-        // Enhanced Code Formatting
-        const formatCodeBtn = document.getElementById('format-code-btn');
-        /**
-         * Updates the disabled state of the format buttons based on language support and selection.
-         */
-        async function updateFormatButtonState() {
-            const isFormatEnabled = await canFormatLanguage(currentLanguage);
-            formatCodeBtn.disabled = !isFormatEnabled || isReadOnlyMode;
-            // Context menu format button is disabled if no selection OR not supported OR read-only
-            contextFormatBtn.disabled = !isFormatEnabled || editorInstance.getSelection().isEmpty() || isReadOnlyMode;
-        }
-
+        // Code Formatting
         formatCodeBtn.addEventListener('click', async () => {
           if (isReadOnlyMode) {
             showToast('Cannot format code in read-only mode.', 'info');
@@ -1681,59 +1600,50 @@
           }
           try {
             if (await canFormatLanguage(currentLanguage)) {
-              showToast('Formatting code in Arbo Editor...', 'info');
+              showToast('Formatting code...', 'info');
               await editorInstance.getAction('editor.action.formatDocument').run();
-              showToast('Code formatted successfully in Arbo Editor!', 'success');
+              showToast('Code formatted successfully!', 'success');
             } else {
-              showToast('Formatting not supported for this language in Arbo Editor.', 'info');
+              showToast('Formatting not supported for this language.', 'info');
             }
           } catch (err) {
-            console.error('Formatting error in Arbo Editor:', err);
-            showToast('Failed to format code in Arbo Editor. See console for details.', 'error');
+            console.error('Formatting error:', err);
+            showToast('Failed to format code. See console for details.', 'error');
           }
         });
-        updateFormatButtonState(); // Call initially to set correct state
 
         // Context Menu
-        const customContextMenu = document.getElementById('custom-context-menu');
-        const contextCopyBtn = document.getElementById('context-copy-btn');
-        const contextPasteBtn = document.getElementById('context-paste-btn');
-        const contextCutBtn = document.getElementById('context-cut-btn');
-        const contextSelectAllBtn = document.getElementById('context-select-all-btn');
-        const contextFormatBtn = document.getElementById('context-format-btn');
-        const editorContainerDiv = document.getElementById('container');
+        const editorContainerDiv = document.getElementById('container'); // Monaco's main container
 
         let touchTimer;
-        const LONG_PRESS_THRESHOLD = 500; // milliseconds
+        const LONG_PRESS_THRESHOLD = 500;
 
         // Handle touchstart for long press to show context menu
         editorContainerDiv.addEventListener('touchstart', (e) => {
-          // Only trigger for single touch
           if (e.touches.length === 1) {
             const touch = e.touches[0];
             let startX = touch.clientX;
             let startY = touch.clientY;
             touchTimer = setTimeout(() => {
-              // Check if touch hasn't moved significantly
               if (Math.abs(touch.clientX - startX) < 10 && Math.abs(touch.clientY - startY) < 10) {
-                e.preventDefault(); // Prevent default browser context menu/selection
+                e.preventDefault();
                 showContextMenu(touch.clientX, touch.clientY);
               }
             }, LONG_PRESS_THRESHOLD);
           }
-        }, { passive: false }); // Use passive: false to allow preventDefault
+        }, { passive: false });
 
         editorContainerDiv.addEventListener('touchmove', () => {
-          clearTimeout(touchTimer); // Cancel long press if finger moves
+          clearTimeout(touchTimer);
         });
 
         editorContainerDiv.addEventListener('touchend', () => {
-          clearTimeout(touchTimer); // Cancel long press if finger is lifted
+          clearTimeout(touchTimer);
         });
 
         // Native Monaco Context Menu override
         editorInstance.onContextMenu((e) => {
-          e.event.preventDefault(); // Prevent Monaco's default context menu
+          e.event.preventDefault();
           showContextMenu(e.event.clientX, e.event.clientY);
         });
 
@@ -1745,36 +1655,32 @@
         function showContextMenu(x, y) {
           const selection = editorInstance.getSelection();
           const hasSelection = !selection.isEmpty();
-          // Disable/enable context menu items based on selection and read-only mode
+
           contextCopyBtn.disabled = !hasSelection;
           contextCutBtn.disabled = !hasSelection || isReadOnlyMode;
           contextPasteBtn.disabled = isReadOnlyMode;
-          contextFormatBtn.disabled = !hasSelection || !(canFormatLanguage(currentLanguage)) || isReadOnlyMode;
+          contextFormatBtn.disabled = !hasSelection || !canFormatLanguage(currentLanguage) || isReadOnlyMode; // Ensure async check is handled
 
           customContextMenu.classList.add('show');
           customContextMenu.setAttribute('aria-hidden', 'false');
 
           let finalX = x;
           let finalY = y;
-          const menuWidth = customContextMenu.offsetWidth;
-          const menuHeight = customContextMenu.offsetHeight;
+          const menuRect = customContextMenu.getBoundingClientRect(); // Get current size
+          const menuWidth = menuRect.width;
+          const menuHeight = menuRect.height;
 
-          // Adjust position to keep it within viewport, considering potential CSS scaling on mobile
-          const scaleFactor = getComputedStyle(document.body).transform !== 'none' ? parseFloat(getComputedStyle(document.body).transform.split(',')[0].slice(7)) : 1;
-          const viewportWidth = window.innerWidth / scaleFactor;
-          const viewportHeight = window.innerHeight / scaleFactor;
-
-          if ((x / scaleFactor) + menuWidth > viewportWidth - 10) {
-            finalX = (viewportWidth - menuWidth - 10) * scaleFactor;
+          // Adjust position to keep it within viewport
+          if (x + menuWidth > window.innerWidth - 10) {
+            finalX = window.innerWidth - menuWidth - 10;
           }
-          if ((y / scaleFactor) + menuHeight > viewportHeight - 10) {
-            finalY = (viewportHeight - menuHeight - 10) * scaleFactor;
+          if (y + menuHeight > window.innerHeight - 10) {
+            finalY = window.innerHeight - menuHeight - 10;
           }
 
           customContextMenu.style.left = `${Math.max(0, finalX)}px`;
           customContextMenu.style.top = `${Math.max(0, finalY)}px`;
-          // Focus the first actionable button for keyboard navigation
-          contextCopyBtn.focus();
+          contextCopyBtn.focus(); // Focus the first actionable button
         }
 
         // Context Menu Keyboard Navigation
@@ -1784,7 +1690,6 @@
             if (e.key === 'ArrowDown') {
               e.preventDefault();
               let nextIndex = (index + 1) % contextButtons.length;
-              // Skip disabled buttons when navigating
               while (contextButtons[nextIndex].disabled && nextIndex !== index) {
                   nextIndex = (nextIndex + 1) % contextButtons.length;
               }
@@ -1792,14 +1697,13 @@
             } else if (e.key === 'ArrowUp') {
               e.preventDefault();
               let prevIndex = (index - 1 + contextButtons.length) % contextButtons.length;
-              // Skip disabled buttons when navigating
               while (contextButtons[prevIndex].disabled && prevIndex !== index) {
                   prevIndex = (prevIndex - 1 + contextButtons.length) % contextButtons.length;
               }
               contextButtons[prevIndex].focus();
             } else if (e.key === 'Escape') {
               hideContextMenu();
-              editorInstance.focus(); // Return focus to editor
+              editorInstance.focus();
             }
           });
         });
@@ -1812,39 +1716,41 @@
             customContextMenu.setAttribute('aria-hidden', 'true');
         }
 
-        // Hide context menu when clicking outside
+        // Hide context menu when clicking outside or tapping
         document.addEventListener('click', (e) => {
-          // If the click is not inside the context menu AND not inside the editor
           if (!customContextMenu.contains(e.target) && !editorContainerDiv.contains(e.target)) {
             hideContextMenu();
           }
         });
 
+        document.addEventListener('touchstart', (e) => {
+            if (!customContextMenu.contains(e.target)) {
+                hideContextMenu();
+            }
+        }, { passive: true }); // Passive listener for better performance on mobile
+
         // Handle 'focusout' from context menu buttons to hide the menu
         customContextMenu.addEventListener('focusout', (e) => {
-            // Hide if the new focus target is outside the context menu
             if (!customContextMenu.contains(e.relatedTarget)) {
                 hideContextMenu();
             }
         });
-
 
         /**
          * Copies the currently selected text to the clipboard.
          */
         async function copySelectedText() {
           const selectedText = editorInstance.getModel().getValueInRange(editorInstance.getSelection());
-          if (selectedText && selectedText.length > 0) { // Ensure there's actual text
+          if (selectedText) {
             try {
               await navigator.clipboard.writeText(selectedText);
-              showToast('Text copied to clipboard from Arbo Editor!', 'success');
+              showToast('Text copied to clipboard!', 'success');
             } catch (err) {
-              console.error('Failed to copy text in Arbo Editor:', err);
-              // Provide user-friendly message for permission issues
-              showToast('Failed to copy text. Please grant clipboard permissions to Arbo Editor.', 'error');
+              console.error('Failed to copy text:', err);
+              showToast('Failed to copy text. Please grant clipboard permissions.', 'error');
             }
           } else {
-            showToast('No text selected to copy in Arbo Editor.', 'info');
+            showToast('No text selected to copy.', 'info');
           }
         }
 
@@ -1853,20 +1759,20 @@
          */
         async function pasteText() {
           if (isReadOnlyMode) {
-            showToast('Cannot paste in read-only mode in Arbo Editor.', 'info');
+            showToast('Cannot paste in read-only mode.', 'info');
             return;
           }
           try {
             const text = await navigator.clipboard.readText();
-            if (text) { // Only paste if there's text in clipboard
+            if (text) {
                 editorInstance.trigger('source', 'paste', { text });
-                showToast('Text pasted in Arbo Editor!', 'success');
+                showToast('Text pasted!', 'success');
             } else {
                 showToast('Clipboard is empty, nothing to paste.', 'info');
             }
           } catch (err) {
-              console.error('Failed to paste text in Arbo Editor:', err);
-              showToast('Failed to paste text. Please grant clipboard permissions to Arbo Editor.', 'error');
+              console.error('Failed to paste text:', err);
+              showToast('Failed to paste text. Please grant clipboard permissions.', 'error');
           }
         }
 
@@ -1875,39 +1781,27 @@
          */
         async function cutSelectedText() {
           if (isReadOnlyMode) {
-            showToast('Cannot cut in read-only mode in Arbo Editor.', 'info');
+            showToast('Cannot cut in read-only mode.', 'info');
             return;
           }
           const selectedText = editorInstance.getModel().getValueInRange(editorInstance.getSelection());
-          if (selectedText && selectedText.length > 0) { // Ensure there's actual text
+          if (selectedText) {
             try {
               await navigator.clipboard.writeText(selectedText);
-              editorInstance.trigger('source', 'cut'); // Monaco's cut action
-              showToast('Text cut to clipboard from Arbo Editor!', 'success');
+              editorInstance.trigger('source', 'cut');
+              showToast('Text cut to clipboard!', 'success');
             } catch (err) {
-              console.error('Failed to cut text in Arbo Editor:', err);
-              showToast('Failed to cut text. Please grant clipboard permissions to Arbo Editor.', 'error');
+              console.error('Failed to cut text:', err);
+              showToast('Failed to cut text. Please grant clipboard permissions.', 'error');
             }
           } else {
-            showToast('No text selected to cut in Arbo Editor.', 'info');
+            showToast('No text selected to cut.', 'info');
           }
         }
 
-        contextCopyBtn.addEventListener('click', () => {
-          copySelectedText();
-          hideContextMenu();
-        });
-
-        contextPasteBtn.addEventListener('click', () => {
-          pasteText();
-          hideContextMenu();
-        });
-
-        contextCutBtn.addEventListener('click', () => {
-          cutSelectedText();
-          hideContextMenu();
-        });
-
+        contextCopyBtn.addEventListener('click', () => { copySelectedText(); hideContextMenu(); });
+        contextPasteBtn.addEventListener('click', () => { pasteText(); hideContextMenu(); });
+        contextCutBtn.addEventListener('click', () => { cutSelectedText(); hideContextMenu(); });
         contextFormatBtn.addEventListener('click', async () => {
           if (isReadOnlyMode) {
             showToast('Cannot format code in read-only mode.', 'info');
@@ -1918,64 +1812,58 @@
           try {
             if (await canFormatLanguage(currentLanguage)) {
               if (!selection.isEmpty()) {
-                showToast('Formatting selection in Arbo Editor...', 'info');
+                showToast('Formatting selection...', 'info');
                 await editorInstance.getAction('editor.action.formatSelection').run();
-                showToast('Selected code formatted in Arbo Editor!', 'success');
+                showToast('Selected code formatted!', 'success');
               } else {
-                showToast('Formatting document in Arbo Editor...', 'info');
+                showToast('Formatting document...', 'info');
                 await editorInstance.getAction('editor.action.formatDocument').run();
-                showToast('Code formatted in Arbo Editor!', 'success');
+                showToast('Code formatted!', 'success');
               }
             } else {
-              showToast('Formatting not supported for this language in Arbo Editor.', 'info');
+              showToast('Formatting not supported for this language.', 'info');
             }
           } catch (err) {
-            console.error('Formatting error in Arbo Editor:', err);
-            showToast('Failed to format code in Arbo Editor. See console for details.', 'error');
+            console.error('Formatting error:', err);
+            showToast('Failed to format code. See console for details.', 'error');
           }
           hideContextMenu();
         });
-
         contextSelectAllBtn.addEventListener('click', () => {
           editorInstance.setSelection(editorInstance.getModel().getFullModelRange());
-          editorInstance.focus(); // Ensure editor is focused after selecting all
+          editorInstance.focus();
           hideContextMenu();
-          showToast('All text selected in Arbo Editor.', 'info');
+          showToast('All text selected.', 'info');
         });
 
         document.getElementById('copy-all-btn').addEventListener('click', async () => {
           const allText = editorInstance.getValue();
-          if (allText && allText.length > 0) { // Check if editor content is not empty
+          if (allText) {
             try {
               await navigator.clipboard.writeText(allText);
-              showToast('All code copied to clipboard from Arbo Editor!', 'success');
+              showToast('All code copied to clipboard!', 'success');
             } catch (err) {
-              console.error('Failed to copy all text in Arbo Editor:', err);
-              showToast('Failed to copy all text. Please grant clipboard permissions to Arbo Editor.', 'error');
+              console.error('Failed to copy all text:', err);
+              showToast('Failed to copy all text. Please grant clipboard permissions.', 'error');
             }
           } else {
-            showToast('Arbo Editor is empty, nothing to copy.', 'info');
+            showToast('Editor is empty, nothing to copy.', 'info');
           }
         });
 
         // Find/Replace: Trigger Monaco's built-in find widget
         document.getElementById('find-replace-btn').addEventListener('click', () => {
-          // Check if the editor is in read-only mode. Find is allowed, replace is not.
-          // Monaco's find widget internally handles read-only mode for replace functionality.
           editorInstance.getAction('actions.find').run();
-          showToast('Arbo Editor Find/Replace opened.', 'info');
+          showToast('Find/Replace panel opened.', 'info');
         });
 
         // Diff View
-        const diffContainer = document.getElementById('diff-container');
-        const mainEditorContainer = document.getElementById('editor-container');
-        const diffEditorDiv = document.getElementById('diff-editor');
-
         document.getElementById('diff-view-btn').addEventListener('click', () => {
-          mainEditorContainer.style.display = 'none'; // Hide main editor
-          diffContainer.classList.add('show'); // Show diff container
+          // Temporarily hide editor and show diff container
+          editorContainer.style.display = 'none';
+          diffContainer.classList.add('show');
 
-          // Initialize diff editor only once, if not already created
+          // Initialize diff editor if not already created
           if (!diffEditorInstance) {
             diffEditorInstance = monaco.editor.createDiffEditor(diffEditorDiv, {
               theme: currentTheme,
@@ -1992,31 +1880,33 @@
             });
           }
 
-          // Set read-only state for the modified editor in diff view based on main editor's state
-          diffEditorInstance.getModifiedEditor().updateOptions({ readOnly: isReadOnlyMode });
-
           // Ensure originalModel always reflects the state before current edits for meaningful diffs
-          originalModel.setValue(lastAutosaveContent); // Use last auto-saved content as original
-          monaco.editor.setModelLanguage(originalModel, currentLanguage); // Ensure correct language for original model
+          // This is the crucial fix for the diff view.
+          originalModel.setValue(lastAutosaveContent);
+          monaco.editor.setModelLanguage(originalModel, currentLanguage);
 
           diffEditorInstance.setModel({
             original: originalModel,
             modified: editorInstance.getModel()
           });
 
-          diffEditorInstance.layout(); // Layout after setting models
-          showToast('Arbo Editor Diff view enabled.', 'info');
-          diffEditorInstance.getModifiedEditor().focus(); // Focus the modified side for potential edits
+          // Set read-only state for the modified editor in diff view based on main editor's state
+          diffEditorInstance.getModifiedEditor().updateOptions({ readOnly: isReadOnlyMode });
+
+          // Force layout after the container becomes visible
+          diffEditorInstance.layout();
+          showToast('Diff view enabled.', 'info');
+          diffEditorInstance.getModifiedEditor().focus();
         });
 
         document.getElementById('close-diff-btn').addEventListener('click', () => {
           diffContainer.classList.remove('show');
           // Use a timeout to allow transition to complete before changing display
           setTimeout(() => {
-            mainEditorContainer.style.display = 'flex'; // Show main editor again
+            editorContainer.style.display = 'flex';
             editorInstance.layout(); // Layout main editor
             editorInstance.focus(); // Focus main editor
-            showToast('Arbo Editor Diff view closed.', 'info');
+            showToast('Diff view closed.', 'info');
           }, 300); // Match CSS transition duration
         });
 
@@ -2027,15 +1917,14 @@
                 return;
             }
             const modifiedContent = diffEditorInstance.getModifiedEditor().getValue();
-            editorInstance.setValue(modifiedContent); // Update main editor
+            editorInstance.setValue(modifiedContent);
             originalModel.setValue(modifiedContent); // Update original model to match
-            lastAutosaveContent = modifiedContent; // Update last autosaved content
-            await saveToCache(modifiedContent); // Save changes to cache
-            showToast('Changes accepted from Arbo Editor diff view!', 'success');
+            await saveToCache(modifiedContent); // Auto-save accepted changes
 
+            showToast('Changes accepted from diff view!', 'success');
             diffContainer.classList.remove('show');
             setTimeout(() => {
-                mainEditorContainer.style.display = 'flex';
+                editorContainer.style.display = 'flex';
                 editorInstance.layout();
                 editorInstance.focus();
             }, 300);
@@ -2045,74 +1934,97 @@
         });
 
         // Toggle Minimap
-        document.getElementById('toggle-minimap-btn').addEventListener('click', () => {
+        toggleMinimapBtn.addEventListener('click', () => {
           isMinimapEnabled = !isMinimapEnabled;
           editorInstance.updateOptions({ minimap: { enabled: isMinimapEnabled } });
-          if (diffEditorInstance) { // Apply to diff editor as well
+          if (diffEditorInstance) {
             diffEditorInstance.getOriginalEditor().updateOptions({ minimap: { enabled: isMinimapEnabled } });
             diffEditorInstance.getModifiedEditor().updateOptions({ minimap: { enabled: isMinimapEnabled } });
           }
           localStorage.setItem('arboEditorMinimap', isMinimapEnabled);
-          document.getElementById('toggle-minimap-btn').classList.toggle('active', isMinimapEnabled);
-          showToast(`Arbo Editor Minimap ${isMinimapEnabled ? 'Enabled' : 'Disabled'}`, 'info');
+          toggleMinimapBtn.classList.toggle('active', isMinimapEnabled);
+          showToast(`Minimap ${isMinimapEnabled ? 'Enabled' : 'Disabled'}`, 'info');
         });
 
         // Toggle Line Numbers
-        document.getElementById('toggle-line-numbers-btn').addEventListener('click', () => {
+        toggleLineNumbersBtn.addEventListener('click', () => {
           areLineNumbersEnabled = !areLineNumbersEnabled;
           editorInstance.updateOptions({ lineNumbers: areLineNumbersEnabled ? 'on' : 'off' });
-          if (diffEditorInstance) { // Apply to diff editor as well
+          if (diffEditorInstance) {
             diffEditorInstance.getOriginalEditor().updateOptions({ lineNumbers: areLineNumbersEnabled ? 'on' : 'off' });
             diffEditorInstance.getModifiedEditor().updateOptions({ lineNumbers: areLineNumbersEnabled ? 'on' : 'off' });
           }
           localStorage.setItem('arboEditorLineNumbers', areLineNumbersEnabled);
-          document.getElementById('toggle-line-numbers-btn').classList.toggle('active', areLineNumbersEnabled);
-          showToast(`Arbo Editor Line Numbers ${areLineNumbersEnabled ? 'Enabled' : 'Disabled'}`, 'info');
+          toggleLineNumbersBtn.classList.toggle('active', areLineNumbersEnabled);
+          showToast(`Line Numbers ${areLineNumbersEnabled ? 'Enabled' : 'Disabled'}`, 'info');
         });
 
         // Toggle Read-Only Mode
-        const readOnlyOverlay = document.getElementById('read-only-overlay');
-        document.getElementById('read-only-mode-btn').addEventListener('click', () => {
+        readOnlyModeBtn.addEventListener('click', () => {
           isReadOnlyMode = !isReadOnlyMode;
           editorInstance.updateOptions({ readOnly: isReadOnlyMode });
           localStorage.setItem('arboEditorReadOnly', isReadOnlyMode);
-          document.getElementById('read-only-mode-btn').classList.toggle('active', isReadOnlyMode);
+          readOnlyModeBtn.classList.toggle('active', isReadOnlyMode);
           readOnlyOverlay.classList.toggle('visible', isReadOnlyMode);
-          showToast(`Arbo Editor is now ${isReadOnlyMode ? 'Read-Only' : 'Editable'}`, 'info');
+          showToast(`Editor is now ${isReadOnlyMode ? 'Read-Only' : 'Editable'}`, 'info');
 
           if (diffEditorInstance) {
-            // The modified editor in diff view should also respect read-only mode
             diffEditorInstance.getModifiedEditor().updateOptions({ readOnly: isReadOnlyMode });
           }
-          updateFormatButtonState(); // Update format button state based on read-only mode
+          updateFormatButtonState();
         });
 
         // Keyboard Shortcuts
         document.addEventListener('keydown', async (e) => {
-          // Display the pressed key (excluding common modifier keys alone)
           const keyName = e.key;
           if (keyName !== 'Shift' && keyName !== 'Control' && keyName !== 'Alt' && keyName !== 'Meta') {
-              showKeyLog(keyName === ' ' ? 'Space' : keyName); // Show "Space" instead of " " for clarity
+              showKeyLog(keyName === ' ' ? 'Space' : keyName);
           }
 
           // Ctrl/Cmd + S for Save to Cache
           if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-            e.preventDefault(); // Prevent browser's default save dialog
+            e.preventDefault();
             const content = editorInstance.getValue();
-            await saveToCache(content, true); // Show toast for explicit save
-            originalModel.setValue(content); // Sync original model
-            lastAutosaveContent = content; // Update last autosaved content
+            await saveToCache(content, true);
+            if (originalModel) { originalModel.setValue(content); }
           }
-          // Ctrl/Cmd + F for Find (Monaco's built-in)
-          // Ctrl/Cmd + Z for Undo (Monaco's built-in)
-          // Ctrl/Cmd + Y for Redo (Monaco's built-in)
-          // These are already handled by Monaco's default keybindings and the toolbar buttons.
+          // Other shortcuts (like Ctrl/Cmd+F, Z, Y) are handled by Monaco's default keybindings.
         });
       }
 
-      // --- Initialize Arbo Editor and set up all event listeners ---
-      initializeEditor().then(setupEventListeners);
-    });
+      // Initialize Monaco and then setup event listeners
+      require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.52.0/min/vs' } });
+      require(['vs/editor/editor.main'], function () {
+        initializeEditor().then(setupEventListeners);
+      });
+    })(); // End of IIFE
   </script>
+  <style>
+    /* Screen reader only style for labels */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+    /* Separate style for sidebar separators to avoid conflicting with hr element */
+    .sidebar-separator {
+      width: 80%;
+      height: 1px;
+      background-color: var(--border-color);
+      margin: 0.5em 0;
+    }
+    .context-menu-separator {
+      width: 80%;
+      height: 1px;
+      background-color: var(--border-color);
+      margin: 0.3em auto;
+    }
+  </style>
 </body>
 </html>

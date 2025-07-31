@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./icon-1436x1315.png" alt="Arbo Editor Logo" width="150"/>
+  <img src="./icon-512x512.png" alt="Arbo Editor Logo" width="150"/>
 </p>
 
 # Arbo Editor
@@ -9,6 +9,8 @@
   [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/mallikmusaddiq1/arbo-editor/actions)
   [![Latest Release](https://img.shields.io/github/v/release/mallikmusaddiq1/arbo-editor?sort=semver)](https://github.com/mallikmusaddiq1/arbo-editor/releases)
   [![Last Commit](https://img.shields.io/github/last-commit/mallikmusaddiq1/arbo-editor)](https://github.com/mallikmusaddiq1/arbo-editor/commits/main)
+  [![Top Language](https://img.shields.io/github/languages/top/mallikmusaddiq1/arbo-editor)](https://github.com/mallikmusaddiq1/arbo-editor/)
+  [![Total Downloads](https://img.shields.io/github/downloads/mallikmusaddiq1/arbo-editor/total)](https://github.com/mallikmusaddiq1/arbo-editor/releases)
 </p>
 
 ---
@@ -20,7 +22,7 @@ Arbo Editor is a modern, in-browser code editor built with the **Monaco Editor**
 Designed for convenience, Arbo Editor supports **Progressive Web App (PWA)** features for offline use and quick access, along with seamless saving to browser cache and file download capabilities. Its intuitive interface and responsive design make it a versatile tool for quick code edits, learning, and prototyping directly in your web browser.
 
 <p align="center">
-  <img src="./screenshots/screenshot-720x1300.jpg" alt="Arbo Editor Screenshot" width="300"/>
+  <img src="./screenshots/screenshot-1080x1920.png" alt="Arbo Editor Screenshot" width="300"/>
   <br>
   <em>A glimpse of Arbo Editor in action.</em>
 </p>

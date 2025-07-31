@@ -1,52 +1,49 @@
-const CACHE_NAME = 'arbo-editor-cache-v1';
+// service-worker.js
+
+const CACHE_NAME = 'my-app-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  'https://cdnjs.cloudflare.com/ajax/libs/codicon/0.0.8/codicon.min.css',
-  'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js',
-  'https://unpkg.com/monaco-editor@0.52.0/min/vs/editor/editor.main.js',
-  'https://unpkg.com/monaco-editor@0.52.0/min/vs/base/worker/workerMain.js',
-  // Add other Monaco Editor worker scripts as needed, e.g., for specific languages
-  // For example, if you want full JS/TS language support offline:
-  'https://unpkg.com/monaco-editor@0.52.0/min/vs/language/typescript/ts.worker.js',
-  'https://unpkg.com/monaco-editor@0.52.0/min/vs/language/json/json.worker.js',
-  'https://unpkg.com/monaco-editor@0.52.0/min/vs/language/html/html.worker.js',
-  'https://unpkg.com/monaco-editor@0.52.0/min/vs/language/css/css.worker.js',
-  'https://unpkg.com/monaco-editor@0.52.0/min/vs/editor/editor.worker.js'
+  '/styles.css',
+  '/main.js',
+  '/images/logo.png'
 ];
 
-self.addEventListener('install', event => {
+// Install event: Caching essential assets
+self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => {
+      .then((cache) => {
         console.log('Opened cache');
         return cache.addAll(urlsToCache);
       })
   );
 });
 
-self.addEventListener('fetch', event => {
+// Fetch event: Serving assets from cache or network
+self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
-      .then(response => {
+      .then((response) => {
         // Cache hit - return response
         if (response) {
           return response;
         }
+        // No cache hit - fetch from network
         return fetch(event.request).then(
-          response => {
+          (response) => {
             // Check if we received a valid response
-            if(!response || response.status !== 200 || response.type !== 'basic') {
+            if (!response || response.status !== 200 || response.type !== 'basic') {
               return response;
             }
 
             // IMPORTANT: Clone the response. A response is a stream
-            // and can only be consumed once. We must clone it so that
-            // we can send one to the browser and one to the cache.
-            var responseToCache = response.clone();
+            // and can only be consumed once. We consume it once to cache it,
+            // and once the browser consumes it.
+            const responseToCache = response.clone();
 
             caches.open(CACHE_NAME)
-              .then(cache => {
+              .then((cache) => {
                 cache.put(event.request, responseToCache);
               });
 
@@ -54,20 +51,42 @@ self.addEventListener('fetch', event => {
           }
         );
       })
-    );
+  );
 });
 
-self.addEventListener('activate', event => {
+// Activate event: Cleaning up old caches
+self.addEventListener('activate', (event) => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
-    caches.keys().then(cacheNames => {
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.map(cacheName => {
+        cacheNames.map((cacheName) => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            // Delete old caches
             return caches.delete(cacheName);
           }
         })
       );
     })
   );
+});
+
+// Optional: Push notifications (example)
+self.addEventListener('push', (event) => {
+  const title = 'Push Notification';
+  const options = {
+    body: event.data.text(),
+    icon: '/images/logo.png',
+    badge: '/images/badge.png'
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// Optional: Sync event (example for background sync)
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'my-data-sync') {
+    console.log('Background sync triggered for my-data-sync');
+    // Perform background data synchronization here
+    // event.waitUntil(doSomeDataSynchronization());
+  }
 });
