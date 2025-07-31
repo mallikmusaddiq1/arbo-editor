@@ -1,0 +1,11 @@
+Arbo Editor
+Version: 1.0.0
+Release Date: 2025-07-31
+
+Features:
+- Offline support (PWA)
+- Code editor UI with syntax highlighting
+- File save/load support
+- Mobile-first responsive design
+- Theme + font toggle
+- Manifest + Service Worker enabled

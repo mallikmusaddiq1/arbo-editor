@@ -1,0 +1,25 @@
+# OS-specific junk
+.DS_Store
+Thumbs.db
+
+# Node/npm cache (if you use later)
+node_modules/
+npm-debug.log*
+
+# Build or dist folders
+/dist/
+/build/
+
+# IDE/editor junk
+.vscode/
+.idea/
+*.log
+
+# System file backups
+*.bak
+*.swp
+*.tmp
+
+# Environment config (for future use)
+.env
+
